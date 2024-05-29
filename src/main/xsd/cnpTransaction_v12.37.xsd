@@ -2,8 +2,8 @@
            xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
-    <xs:include schemaLocation="cnpCommon_v12.34.xsd"/>
-    <xs:include schemaLocation="cnpRecurring_v12.34.xsd"/>
+    <xs:include schemaLocation="cnpCommon_v12.37.xsd"/>
+    <xs:include schemaLocation="cnpRecurring_v12.37.xsd"/>
 
     <xs:element name="transaction" type="xp:transactionType" abstract="true"/>
 
@@ -195,6 +195,8 @@
                             <xs:element name="fraudSwitchIndicator" type="xp:fraudSwitchIndicatorEnum" minOccurs="0"/>
                             <xs:element ref="xp:passengerTransportData" minOccurs="0"/>
                             <xs:element name="authIndicator" type="xp:authIndicatorEnum" minOccurs="0"/>
+                            <xs:element ref="xp:accountFundingTransactionData" minOccurs="0"/>
+                            <xs:element name="fraudCheckAction" type="xp:fraudCheckActionEnum" minOccurs="0"/>
                         </xs:sequence>
                     </xs:choice>
                 </xs:extension>
@@ -308,6 +310,7 @@
                         <xs:element name="businessIndicator" type="xp:businessIndicatorEnum" minOccurs="0"/>
                         <xs:element ref="xp:passengerTransportData" minOccurs="0"/>
                         <xs:element name="foreignRetailerIndicator" type="xp:foreignRetailerIndicatorEnum" minOccurs="0"/>
+                        <xs:element ref="xp:accountFundingTransactionData" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -351,6 +354,7 @@
                         <xs:element name="crypto" type="xs:boolean" minOccurs="0"/>
                         <xs:element ref="xp:passengerTransportData" minOccurs="0"/>
                         <xs:element name="foreignRetailerIndicator" type="xp:foreignRetailerIndicatorEnum" minOccurs="0"/>
+                        <xs:element ref="xp:accountFundingTransactionData" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -431,6 +435,8 @@
                         <xs:element name="fraudSwitchIndicator" type="xp:fraudSwitchIndicatorEnum" minOccurs="0"/>
                         <xs:element ref="xp:passengerTransportData" minOccurs="0"/>
                         <xs:element name="foreignRetailerIndicator" type="xp:foreignRetailerIndicatorEnum" minOccurs="0"/>
+                        <xs:element ref="xp:accountFundingTransactionData" minOccurs="0"/>
+                        <xs:element name="fraudCheckAction" type="xp:fraudCheckActionEnum" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -511,6 +517,7 @@
                         <xs:element name="payPalNotes" type="xp:payPalNotesType" minOccurs="0"/>
                         <xs:element name="actionReason" type="xp:actionReasonType" minOccurs="0"/>
                         <xs:element name="businessIndicator" type="xp:businessIndicatorEnum" minOccurs="0"/>
+                        <xs:element ref="xp:accountFundingTransactionData" minOccurs="0"/>
                     </xs:sequence>
                 </xs:extension>
             </xs:complexContent>
@@ -758,8 +765,8 @@
     <xs:simpleType name="actionReasonType">
         <xs:restriction base="xs:string">
             <xs:maxLength value="255"/>
-            <!-- <xs:enumeration value="UNKNOWN"/>
-            <xs:enumeration value="SUSPECT_FRAUD"/> -->
+            <!-- <xs:enumeration value="UNKNOWN" />
+            <xs:enumeration value="SUSPECT_FRAUD" /> -->
         </xs:restriction>
     </xs:simpleType>
 
@@ -1581,7 +1588,7 @@
                             <xs:element name="secondaryAmount" type="xp:transactionAmountType" minOccurs="0"/>
                             <xs:element name="orderSource" type="xp:orderSourceType"/>
                             <xs:element ref="xp:billToAddress"/>
-                            <xs:element ref="xp:shipToAddress"  minOccurs="0"/>
+                            <xs:element ref="xp:shipToAddress" minOccurs="0"/>
                             <xs:choice>
                                 <xs:element name="echeck" type="xp:echeckType"/>
                                 <xs:element name="echeckToken" type="xp:echeckTokenType"/>
@@ -1832,6 +1839,14 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
+    <xs:complexType name="finicityAccountInfoType">
+        <xs:all>
+            <xs:element name="accountId" type="xs:string"/>
+            <xs:element name="accType" type="xp:echeckAccountTypeEnum"/>
+            <xs:element name="realAccNum" type="xp:echeckAccountNumberType"/>
+            <xs:element name="routingNum" type="xp:routingNumberType"/>
+        </xs:all>
+    </xs:complexType>
 
     <xs:complexType name="echeckType">
         <xs:all>
@@ -1841,6 +1856,7 @@
             <xs:element name="checkNum" type="xp:checkNumberType" minOccurs="0"/>
             <xs:element name="ccdPaymentInformation" type="xp:string80Type" minOccurs="0"/>
             <xs:element name="echeckCustomerId" type="xp:string25Type" minOccurs="0"/>
+            <xs:element name="accountId" type="xs:string" minOccurs="0"/>
         </xs:all>
     </xs:complexType>
 
@@ -2308,7 +2324,7 @@
 
     <xs:simpleType name="processingTypeEnum">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="accountFunding"/>
+            <xs:enumeration value="accountFunding"/> <!-- Deprecated in kit 281: see accountFundingTransactionData -->
             <xs:enumeration value="initialRecurring"/>
             <xs:enumeration value="initialInstallment"/>
             <xs:enumeration value="initialCOF"/>
@@ -3261,7 +3277,6 @@
             <xs:element name="tag" type="xp:string100Type" minOccurs="0" maxOccurs="5"/>
         </xs:sequence>
     </xs:complexType>
-
     <xs:element name="subscription">
         <xs:complexType >
             <xs:all>
@@ -3283,5 +3298,48 @@
             </xs:all>
         </xs:complexType>
     </xs:element>
+
+    <xs:element name="accountFundingTransactionData">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="receiverFirstName" type="xp:string35Type" minOccurs="0"/>
+                <xs:element name="receiverLastName" type="xp:string35Type" minOccurs="0"/>
+                <xs:element name="receiverState" type="xp:stateTypeEnum" minOccurs="0"/>
+                <xs:element name="receiverCountry" type="xp:countryTypeEnum" minOccurs="0"/>
+                <xs:element name="receiverAccountNumberType" type="xp:accountFundingTransactionAccountNumberTypeEnum" minOccurs="0"/>
+                <xs:element name="receiverAccountNumber" type="xp:string50Type" minOccurs="0"/>
+                <xs:element name="accountFundingTransactionType" type="xp:accountFundingTransactionTypeEnum" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="fraudCheckActionEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="APPROVED_SKIP_FRAUD_CHECK"/>
+            <xs:enumeration value="DECLINED_NEED_FRAUD_CHECK"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="postCheckoutRedirectUrl">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:minLength value="1"/>
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+    <xs:simpleType name="provider">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AFFIRM" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="inquiryResultType">
+        <xs:all>
+            <xs:element name="response" type="xp:responseType" minOccurs="0"/>
+            <xs:element name="message" type="xp:messageType" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
 
 </xs:schema>

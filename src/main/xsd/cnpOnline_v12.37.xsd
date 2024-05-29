@@ -3,7 +3,7 @@
 <xs:schema targetNamespace="http://www.vantivcnp.com/schema" xmlns:xp="http://www.vantivcnp.com/schema"
            xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-    <xs:include schemaLocation="cnpTransaction_v12.34.xsd" />
+    <xs:include schemaLocation="cnpTransaction_v12.37.xsd" />
 
     <xs:complexType name="baseRequest">
         <xs:sequence>
@@ -308,7 +308,7 @@
         </xs:complexType>
     </xs:element>
 
- <!--   <xs:element name="vendorCredit" substitutionGroup="xp:transaction">
+   <!-- <xs:element name="vendorCredit" substitutionGroup="xp:transaction">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="xp:transactionTypeWithReportGroup">
@@ -428,6 +428,81 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>-->
+
+    <xs:element name="BNPLAuthorizationRequest" substitutionGroup="xp:transaction">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="amount" type="xp:transactionAmountType" />
+                        <xs:element name="orderId" type="xp:string256Type" minOccurs="0"/>
+                        <xs:element name="provider" type="xp:provider" minOccurs="1"/>
+                        <xs:element ref="xp:postCheckoutRedirectUrl" minOccurs="0" />
+                        <xs:element ref="xp:customerInfo" minOccurs="0" />
+                        <xs:element ref="xp:billToAddress" minOccurs="0" />
+                        <xs:element ref="xp:shipToAddress" minOccurs="0" />
+                        <xs:element ref="xp:enhancedData" minOccurs="0" />
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLCaptureRequest" substitutionGroup="xp:transaction">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="amount" type="xp:transactionAmountType" minOccurs="1"/>
+                        <xs:element name="orderId" type="xp:string256Type" minOccurs="0"/>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="1" />
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLRefundRequest" substitutionGroup="xp:transaction">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="amount" type="xp:transactionAmountType" minOccurs="1"/>
+                        <xs:element name="orderId" type="xp:string256Type" minOccurs="0"/>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="1" />
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLCancelRequest" substitutionGroup="xp:transaction">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="amount" type="xp:transactionAmountType" minOccurs="1"/>
+                        <xs:element name="orderId" type="xp:string256Type" minOccurs="0"/>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="1" />
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLInquiryRequest" substitutionGroup="xp:transaction">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="orderId" type="xp:string256Type" minOccurs="0"/>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="1" />
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="finicityUrlRequest" substitutionGroup="xp:transaction">
         <xs:complexType>
             <xs:complexContent>
@@ -454,6 +529,117 @@
                         <xs:element name="location" type="xs:string" minOccurs="0"/>
                         <xs:element name="echeckCustomerId" type="xp:string25Type" minOccurs="0"/>
                         <xs:element name="url" type="xs:string" minOccurs="0"/>
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="finicityAccountRequest" substitutionGroup="xp:transaction">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="echeckCustomerId" type="xp:string25Type"  minOccurs="0" />
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="finicityAccountResponse" substitutionGroup="xp:transactionResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="0"/>
+                        <xs:element name="response" type="xp:responseType" minOccurs="0"/>
+                        <xs:element name="responseTime" type="xs:dateTime" minOccurs="0"/>
+                        <xs:element name="message" type="xp:messageType" minOccurs="0"/>
+                        <xs:element name="location" type="xs:string" minOccurs="0"/>
+                        <xs:element name="finicityAccount" type="xp:finicityAccountInfoType" minOccurs="0" />
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLAuthResponse" substitutionGroup="xp:transactionResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="0"/>
+                        <xs:element name="response" type="xp:responseType" minOccurs="0"/>
+                        <xs:element name="responseTime" type="xs:dateTime" minOccurs="0"/>
+                        <xs:element name="message" type="xp:messageType" minOccurs="0"/>
+                        <xs:element name="location" type="xs:string" minOccurs="0"/>
+                        <xs:element name="checkoutUrl" type="xs:string" minOccurs="0"/>
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLCaptureResponse" substitutionGroup="xp:transactionResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="0"/>
+                        <xs:element name="response" type="xp:responseType" minOccurs="0"/>
+                        <xs:element name="responseTime" type="xs:dateTime" minOccurs="0"/>
+                        <xs:element name="message" type="xp:messageType" minOccurs="0"/>
+                        <xs:element name="location" type="xs:string" minOccurs="0"/>
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLRefundResponse" substitutionGroup="xp:transactionResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="0"/>
+                        <xs:element name="response" type="xp:responseType" minOccurs="0"/>
+                        <xs:element name="responseTime" type="xs:dateTime" minOccurs="0"/>
+                        <xs:element name="message" type="xp:messageType" minOccurs="0"/>
+                        <xs:element name="location" type="xs:string" minOccurs="0"/>
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLCancelResponse" substitutionGroup="xp:transactionResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="0"/>
+                        <xs:element name="response" type="xp:responseType" minOccurs="0"/>
+                        <xs:element name="responseTime" type="xs:dateTime" minOccurs="0"/>
+                        <xs:element name="message" type="xp:messageType" minOccurs="0"/>
+                        <xs:element name="location" type="xs:string" minOccurs="0"/>
+                    </xs:all>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="BNPLInquiryResponse" substitutionGroup="xp:transactionResponse">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="xp:transactionTypeWithReportGroup">
+                    <xs:all>
+                        <xs:element name="cnpTxnId" type="xp:cnpIdType" minOccurs="0"/>
+                        <xs:element name="response" type="xp:responseType" minOccurs="0"/>
+                        <xs:element name="responseTime" type="xs:dateTime" minOccurs="0"/>
+                        <xs:element name="message" type="xp:messageType" minOccurs="0"/>
+                        <xs:element name="location" type="xs:string" minOccurs="0"/>
+                        <xs:element name="inquiryResult" type="xp:inquiryResultType" minOccurs="0"/>
                     </xs:all>
                 </xs:extension>
             </xs:complexContent>
