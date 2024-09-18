@@ -21,6 +21,11 @@ import javax.xml.transform.stream.StreamResult;
 
 import io.github.vantiv.sdk.generate.*;
 import io.github.vantiv.sdk.generate.Void;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class CnpOnline {
 
@@ -28,6 +33,9 @@ public class CnpOnline {
     private Communication communication;
     private Boolean removeStubs = false;
     String encryptedTxn;
+    String newXmlRequest;
+    String output;
+    String payload;
 
     /**
      * Construct a CnpOnline using the configuration specified in $HOME/.cnp_SDK_config.properties
@@ -80,11 +88,16 @@ public class CnpOnline {
     }
 
     public AuthorizationResponse authorize(Authorization auth, CnpOnlineRequest overrides) throws CnpOnlineException {
+        CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(auth);
 
         request.setTransaction(CnpContext.getObjectFactory().createAuthorization(auth));
-        CnpOnlineResponse response = sendToCnp(request);
+        if ("true".equalsIgnoreCase(config.getProperty("isEncryptedPayload"))){
+             response = sendToCnpForEncryption(request);
+        }   else {
+             response = sendToCnp(request);
+        }
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (AuthorizationResponse) newresponse.getValue();
     }
@@ -625,12 +638,11 @@ public class CnpOnline {
         return (GiftCardCreditResponse) newresponse.getValue();
     }
 
-    /*public PayFacCreditResponse payFacCredit(PayFacCredit payFacCredit) {
+    public PayFacCreditResponse payFacCredit(PayFacCredit payFacCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return payFacCredit(payFacCredit, request);
     }
-    */
-    /*public PayFacCreditResponse payFacCredit(PayFacCredit payFacCredit, CnpOnlineRequest overrides) {
+    public PayFacCreditResponse payFacCredit(PayFacCredit payFacCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payFacCredit);
 
@@ -638,7 +650,7 @@ public class CnpOnline {
         CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PayFacCreditResponse)newresponse.getValue();
-    }*/
+    }
 
     public PayFacDebitResponse payFacDebit(PayFacDebit payFacDebit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
@@ -655,12 +667,11 @@ public class CnpOnline {
         return (PayFacDebitResponse) newresponse.getValue();
     }
 
-   /* public SubmerchantCreditResponse submerchantCredit(SubmerchantCredit submerchantCredit) {
+    public SubmerchantCreditResponse submerchantCredit(SubmerchantCredit submerchantCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return submerchantCredit(submerchantCredit, request);
     }
-    */
-    /*public SubmerchantCreditResponse submerchantCredit(SubmerchantCredit submerchantCredit, CnpOnlineRequest overrides) {
+    public SubmerchantCreditResponse submerchantCredit(SubmerchantCredit submerchantCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(submerchantCredit);
 
@@ -668,7 +679,7 @@ public class CnpOnline {
         CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (SubmerchantCreditResponse)newresponse.getValue();
-    }*/
+    }
 
     public SubmerchantDebitResponse submerchantDebit(SubmerchantDebit submerchantDebit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
@@ -685,12 +696,12 @@ public class CnpOnline {
         return (SubmerchantDebitResponse) newresponse.getValue();
     }
     
-   /* public ReserveCreditResponse submerchantCredit(ReserveCredit reserveCredit) {
+    public ReserveCreditResponse submerchantCredit(ReserveCredit reserveCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return reserveCredit(reserveCredit, request);
-    }*/
+    }
     
-   /* public ReserveCreditResponse reserveCredit(ReserveCredit reserveCredit, CnpOnlineRequest overrides) {
+    public ReserveCreditResponse reserveCredit(ReserveCredit reserveCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(reserveCredit);
 
@@ -698,7 +709,7 @@ public class CnpOnline {
         CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (ReserveCreditResponse)newresponse.getValue();
-    }*/
+    }
 
     public ReserveDebitResponse submerchantDebit(ReserveDebit reserveDebit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
@@ -856,12 +867,12 @@ public class CnpOnline {
         return (CustomerDebitResponse) newresponse.getValue();
     }
 
-   /* public PayoutOrgCreditResponse payoutOrgCredit(PayoutOrgCredit payoutOrgCredit) {
+    public PayoutOrgCreditResponse payoutOrgCredit(PayoutOrgCredit payoutOrgCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return payoutOrgCredit(payoutOrgCredit, request);
-    }*/
+    }
 
-   /* public PayoutOrgCreditResponse payoutOrgCredit(PayoutOrgCredit payoutOrgCredit, CnpOnlineRequest overrides) {
+    public PayoutOrgCreditResponse payoutOrgCredit(PayoutOrgCredit payoutOrgCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payoutOrgCredit);
 
@@ -869,7 +880,7 @@ public class CnpOnline {
         CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PayoutOrgCreditResponse)newresponse.getValue();
-    }*/
+    }
 
     public PayoutOrgDebitResponse payoutOrgDebit(PayoutOrgDebit payoutOrgDebit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
@@ -990,8 +1001,6 @@ public class CnpOnline {
         return (BNPLInquiryResponse) newresponse.getValue();
     }
 
-
-
     public EncryptionKeyResponse encryptionKeyRequest(EncryptionKeyRequestEnum encryptionKeyRequest) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return encryptionKeyRequest(encryptionKeyRequest, request);
@@ -999,43 +1008,16 @@ public class CnpOnline {
 
     public EncryptionKeyResponse encryptionKeyRequest(EncryptionKeyRequestEnum encryptionKeyRequest, CnpOnlineRequest overrides) throws CnpOnlineException {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
-      //  fillInReportGroup(encryptionKeyRequest);
 
         request.setEncryptionKeyRequest(CnpContext.getObjectFactory().createEncryptionKeyRequest(encryptionKeyRequest).getValue()); //convert
         CnpOnlineResponse response = sendToCnp(request);
-      //  JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
-       // JAXBElement<EncryptionKeyResponse> newresponse = (JAXBElement<EncryptionKeyResponse>) response.getEncryptionKeyResponse();
-       // return (EncryptionKeyResponse) newresponse.getValue();
-
 
         EncryptionKeyResponse encryptionKeyResponse = response.getEncryptionKeyResponse();
-    //    QName qName = new QName("namespaceURI", "localPart");  // Adjust with your specific QName values
-      //  JAXBElement<EncryptionKeyResponse> jaxbElement = new JAXBElement<>(qName, EncryptionKeyResponse.class, encryptionKeyResponse);
         QName qName = new QName("http://www.vantivcnp.com/schema", "encryptionKeyResponse");
         JAXBElement<EncryptionKeyResponse> jaxbElement = new JAXBElement<>(qName, EncryptionKeyResponse.class, encryptionKeyResponse);
         return jaxbElement.getValue();
     }
-    /*
-    public EncryptionKeyResponse encryptionKeyRequest(EncryptionKeyRequestEnum encryptionKeyRequestEnum) {
-        CnpOnlineRequest request = createCnpOnlineRequest();
-        return encryptionKeyRequest(encryptionKeyRequestEnum, request);
-    }
 
-   public EncryptionKeyResponse encryptionKeyRequest(EncryptionKeyRequestEnum encryptionKeyRequestEnum, CnpOnlineRequest overrides) throws CnpOnlineException {
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
-       // fillInReportGroup(encryptionKeyRequestEnum);
-
-        // Use the ObjectFactory to create the JAXBElement
-        JAXBElement<EncryptionKeyRequestEnum> jaxbElement = CnpContext.getObjectFactory().createEncryptionKeyRequest(encryptionKeyRequestEnum);
-        request.setTransaction(jaxbElement);
-     //   request.setTransaction(CnpContext.getObjectFactory().createEncryptionKeyRequest(encryptionKeyRequestEnum));
-
-
-        CnpOnlineResponse response = sendToCnp(request);
-        JAXBElement<?> newResponse = response.getTransactionResponse();
-        return (EncryptionKeyResponse) newResponse.getValue();
-    }
-*/
     private CnpOnlineRequest createCnpOnlineRequest() {
         CnpOnlineRequest request = new CnpOnlineRequest();
         request.setMerchantId(config.getProperty("merchantId"));
@@ -1102,45 +1084,6 @@ public class CnpOnline {
                 xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
             }
 
-            if ("true".equalsIgnoreCase(config.getProperty("isEncryptedPayload"))) {
-                xmlRequest = sw.toString().trim().replaceAll("^([\\W]+)<", "<");
-
-                System.out.println(xmlRequest);
-
-                String output;
-                try {
-                    Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlRequest)));
-
-                    Element root = doc.getDocumentElement();
-                    NodeList childNodes = root.getChildNodes();
-                    Node secondElement = root.getChildNodes().item(1);  // This will get the "authorization" element
-
-                    // Convert the second element back into a string (XML format)
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
-                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");  // for pretty print
-                    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes"); // omit the XML declaration in the output
-
-                    StringWriter writer = new StringWriter();
-                    transformer.transform(new DOMSource(secondElement), new StreamResult(writer));
-
-                    output = writer.getBuffer().toString();
-
-                    System.out.println("request  for AUTH  is " + output);
-
-                } catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-                processTxnToBeEncrypted(output);
-
-
-            }
-
-            //logic to form a req with  encryptedPayload --copy encrypeted text in one tag <payload> -- form a encytpedPayload add keySeq from proerty file  --replace specific txn by encytpedPayload
-
-
             //	System.out.println("config-------------"+config+"\n\n\n");
             String xmlResponse = communication.requestToServer(xmlRequest, config);
             /**
@@ -1171,17 +1114,108 @@ public class CnpOnline {
         } finally {
         }
     }
-        public String processTxnToBeEncrypted (String request ) throws CnpBatchException {
+
+    private CnpOnlineResponse sendToCnpForEncryption(CnpOnlineRequest request) throws CnpOnlineException {
+        try {
+            StringWriter sw = new StringWriter();
+            CnpContext.getJAXBContext().createMarshaller().marshal(request, sw);
+            String xmlRequest = sw.toString();
+
+            if (this.removeStubs) {
+                xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
+            }
+            //   xmlRequest = sw.toString().trim().replaceAll("^([\\W]+)<", "<");
+          //Get the specific txn tag to be sent for encryption logic
             try {
+                Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlRequest)));
 
-                encryptedTxn = PgpHelper.encryptString(request, config.getProperty("encryptionKeyPath"));
+                Element root = doc.getDocumentElement();
+                Node secondElement = root.getChildNodes().item(1);
 
-                System.out.println("encrypetd Payload is " + encryptedTxn);
-            } catch (Exception e) {
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");  //
+                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+
+                StringWriter writer = new StringWriter();
+                transformer.transform(new DOMSource(secondElement), new StreamResult(writer));
+                output = writer.getBuffer().toString().trim();
+                //removing the txn tag as encryptedPayload tag will get appended
+                if (secondElement != null) {
+                    root.removeChild(secondElement);
+                }
+
+                payload = processTxnToBeEncrypted(output);
+                //to form encryptedPayload tag
+                String payloadTag = String.format("<payload>%s</payload>", payload);
+
+                String keySeq = config.getProperty("keySequence");
+
+                String encryptionKeySequenceTag = String.format("<encryptionKeySequence>%s</encryptionKeySequence>", keySeq);
+
+                String encryptedPayload = String.format(
+                        "<encryptedPayload>\n%s\n%s\n</encryptedPayload>",
+                        encryptionKeySequenceTag,
+                        payloadTag
+                );
+                //for replacing specific txn tag by encryptedPayload, it will be append to the root element
+                Document encryptedPayloadDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(encryptedPayload)));
+                Node newEncryptedPayloadNode = doc.importNode(encryptedPayloadDoc.getDocumentElement(), true);
+
+                root.appendChild(newEncryptedPayloadNode);
+
+                Transformer transformer1 = TransformerFactory.newInstance().newTransformer();
+                transformer1.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer1.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                StringWriter writer1 = new StringWriter();
+                transformer.transform(new DOMSource(doc), new StreamResult(writer1));
+                newXmlRequest = writer1.getBuffer().toString().trim();
+            } catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
                 throw new RuntimeException(e);
             }
-            return encryptedTxn;
+
+                //	System.out.println("config-------------"+config+"\n\n\n");
+                String xmlResponse = communication.requestToServer(newXmlRequest, config);
+                /**
+                 * This was added to accommodate an issue with OpenAccess and possibly VAP where the XML namespace returned
+                 * contains the extra "/online".
+                 * This issue will be fixed for OpenAccess in Jan 2018
+                 */
+                if (xmlResponse.contains("http://www.vantivcnp.com/schema/online")) {
+                    xmlResponse = xmlResponse.replace("http://www.vantivcnp.com/schema/online", "http://www.vantivcnp.com/schema");
+                }
+
+                CnpOnlineResponse response = (CnpOnlineResponse) CnpContext.getJAXBContext().createUnmarshaller().unmarshal(new StringReader(xmlResponse));
+                // non-zero responses indicate a problem
+                if (!"0".equals(response.getResponse())) {
+                    if ("2".equals(response.getResponse()) || "3".equals(response.getResponse())) {
+                        throw new CnpInvalidCredentialException(response.getMessage());
+                    } else if ("4".equals(response.getResponse())) {
+                        throw new CnpConnectionLimitExceededException(response.getMessage());
+                    } else if ("5".equals(response.getResponse())) {
+                        throw new CnpObjectionableContentException(response.getMessage());
+                    } else {
+                        throw new CnpOnlineException(response.getMessage());
+                    }
+                }
+                return response;
+
+            } catch(
+            JAXBException ume)
+            {
+                throw new CnpOnlineException("Error validating xml data against the schema", ume);
+            } finally {
+                }
         }
+
+    public String processTxnToBeEncrypted (String request ) throws CnpBatchException {
+        try {
+            encryptedTxn = PgpHelper.encryptString(request, config.getProperty("encryptionKeyPath"));
+            } catch (Exception e) {
+            throw new RuntimeException(e);
+           }
+        return encryptedTxn;
+       }
 
 
         private CnpOnlineResponse sendQueryTxnToCnp (CnpOnlineRequest request, Boolean retrySite) throws
@@ -1285,4 +1319,9 @@ public class CnpOnline {
             }
         }
 
+    private void fillInReportGroup (TransactionTypeWithReportGroupAndRtp txn){
+        if (txn.getReportGroup() == null) {
+            txn.setReportGroup(config.getProperty("reportGroup"));
+        }
+    }
 }

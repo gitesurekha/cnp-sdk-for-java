@@ -20,17 +20,19 @@ public class TestTxnForEncryption {
         cnp = new CnpOnline();
     }
 
-    @Before
+    /*@Before
     public void setup() throws IOException {
         Properties properties = new Properties();
         properties.load(new FileInputStream(new Configuration().location()));
         String merchantId = properties.getProperty("merchantId");
+        String isEncryptedPayload=properties.getProperty("isEncryptedPayload");
+        String encyptionKeySeq=properties.getProperty("keySequence");
         config = new Properties();
-        config.setProperty("isEncryptedPayload", "true");
-        config.setProperty("keySequence", "10000");
+        config.setProperty("isEncryptedPayload", isEncryptedPayload);
+        config.setProperty("keySequence", encyptionKeySeq);
         config.setProperty("merchantId", merchantId);
 
-    }
+    }*/
     @Test
     public void simpleAuthForEncryption() throws Exception {
         Authorization authorization = new Authorization();
@@ -41,18 +43,19 @@ public class TestTxnForEncryption {
         authorization.setId("id");
         CardType card = new CardType();
         card.setType(MethodOfPaymentTypeEnum.VI);
-        card.setNumber("4100000000000000");
+        card.setNumber("4100000000000001");
         card.setExpDate("1210");
         authorization.setCard(card);
         AuthorizationResponse response = cnp.authorize(authorization);
         assertEquals("abc",response.getReportGroup());
         assertEquals("sandbox", response.getLocation());
     }
+
     @Test
-    public void simpleAuthForEncryptioKeyReq() throws Exception {
+    public void testEncryptionKeyRequest() throws Exception {
         EncryptionKeyRequest request = new EncryptionKeyRequest();
         request.setEncryptionKeyRequest(EncryptionKeyRequestEnum.CURRENT);
         EncryptionKeyResponse response = cnp.encryptionKeyRequest(request.getEncryptionKeyRequest());
         assertNotNull(response);
-         }
+    }
 }
