@@ -1,16 +1,19 @@
 package io.github.vantiv.sdk;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.util.Date;
 import java.util.Iterator;
 
 import org.bouncycastle.bcpg.ArmoredOutputStream;
+import org.bouncycastle.bcpg.CompressionAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.*;
 import org.bouncycastle.openpgp.jcajce.JcaPGPObjectFactory;
 import org.bouncycastle.openpgp.operator.PBESecretKeyDecryptor;
+import org.bouncycastle.openpgp.operator.PGPDataEncryptorBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.*;
 
 public class PgpHelper {
@@ -227,5 +230,45 @@ public class PgpHelper {
         );
 
         return new EncryptedOutputStream(encOut, fileOutputStream, pOut);
+    }
+    public static String encryptString(String plainText, String publicKey) throws Exception {
+        //  System.out.println("The value for public key  is: " + handler.encryptionKeyMap.get("encryptionKey"));
+        ByteArrayOutputStream encOut = new ByteArrayOutputStream();
+        ArmoredOutputStream armoredOut = new ArmoredOutputStream(encOut);
+        armoredOut.setHeader("Version", "BCPG v1.78");
+        PGPPublicKey pgpPublicKey = readPublicKey(new FileInputStream(publicKey));
+        Security.addProvider(new BouncyCastleProvider());
+
+        byte[] bytes = compressFile(plainText, CompressionAlgorithmTags.ZIP);
+
+        PGPDataEncryptorBuilder encryptorBuilder = new JcePGPDataEncryptorBuilder(PGPEncryptedData.CAST5)
+                .setProvider("BC")
+                .setSecureRandom(new SecureRandom())
+                .setWithIntegrityPacket(true);
+
+        PGPEncryptedDataGenerator encGen = new PGPEncryptedDataGenerator(encryptorBuilder);
+        encGen.addMethod(new JcePublicKeyKeyEncryptionMethodGenerator(pgpPublicKey).setProvider("BC"));
+
+        OutputStream encryptedOut = encGen.open(armoredOut,bytes.length );
+        encryptedOut.write(bytes);
+        encryptedOut.close();
+        armoredOut.close();
+
+        return encOut.toString();
+    }
+
+    static byte[] compressFile(String plainText, int algorithm) throws IOException
+    {
+        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        PGPCompressedDataGenerator comData = new PGPCompressedDataGenerator(algorithm);
+
+        try (OutputStream out = comData.open(bOut)) {
+            PGPLiteralDataGenerator lData = new PGPLiteralDataGenerator();
+            try (OutputStream pOut = lData.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE,
+                    plainText.length(), new Date())) {
+                pOut.write(plainText.getBytes());
+            }        }
+        comData.close();
+        return bOut.toByteArray();
     }
 }

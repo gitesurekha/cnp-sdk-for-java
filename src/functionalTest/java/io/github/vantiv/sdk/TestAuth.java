@@ -1103,5 +1103,31 @@ public class TestAuth {
 		assertEquals("Approved", response.getMessage());
 		assertEquals("sandbox", response.getLocation());
 	}
+	//test for new elements:typeOfDigitalCurrency,conversionAffiliateId , amount- range min/max
+	// and authenticationProtocolVersionType for enum value added 3,4,5,6,7,8,9.
+	@Test
+	public void simpleAuthProtocol() throws Exception {
+		Authorization authorization = new Authorization();
+		authorization.setReportGroup("Planets");
+		authorization.setOrderId("12344");
+		authorization.setAmount(999999999999L);
+		authorization.setOrderSource(OrderSourceType.ECOMMERCE);
+		authorization.setId("id");
+		FraudCheckType fraudCheckType = new FraudCheckType();
+		fraudCheckType.setAuthenticationProtocolVersion(new BigInteger("3"));
+		fraudCheckType.setCustomerIpAddress("127.0.0.1");
+		authorization.setCardholderAuthentication(fraudCheckType);
+		CardType card = new CardType();
+		card.setType(MethodOfPaymentTypeEnum.VI);
+		card.setNumber("4100000000000000");
+		card.setExpDate("1210");
+		authorization.setCard(card);
+		authorization.setTypeOfDigitalCurrency("2");
+		authorization.setConversionAffiliateId("ABCD");
+		AuthorizationResponse response = cnp.authorize(authorization);
+		assertEquals(response.getMessage(), "000",response.getResponse());
+		assertEquals("Approved", response.getMessage());
+		assertEquals("sandbox", response.getLocation());
+	}
 
 }

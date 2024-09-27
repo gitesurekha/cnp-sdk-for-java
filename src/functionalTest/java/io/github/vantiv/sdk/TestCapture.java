@@ -23,6 +23,10 @@ public class TestCapture {
 		Capture capture = new Capture();
 		capture.setCnpTxnId(123456000L);
 		capture.setAmount(106L);
+		PartialCapture pc=new PartialCapture();
+		pc.setPartialCaptureSequenceNumber(1);
+		pc.setPartialCaptureTotalCount(7);
+		capture.setPartialCapture(pc);
 		capture.setPayPalNotes("Notes");
 		capture.setId("id");
 
