@@ -301,7 +301,21 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000001");
 		card.setExpDate("1210");
 		capturegivenauth.setCard(card);
-		testMethodForCaptureGivenAuth();
+		Communication mockedCommunication = mock(Communication.class);
+		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
+					.thenReturn(
+							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><captureGivenAuthResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></captureGivenAuthResponse></cnpOnlineResponse>");
+		}else{
+
+			when(
+					mockedCommunication
+							.requestToServer(
+									matches(".*?<cnpOnlineRequest.*?<user>neweruser</user>.*?<captureGivenAuth.*?<card>.*?<number>4100000000000001</number>.*?</card>.*?</captureGivenAuth>.*?"),
+									any(Properties.class)))
+					.thenReturn(
+							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><captureGivenAuthResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></captureGivenAuthResponse></cnpOnlineResponse>");
+		}
 		cnp.setCommunication(mockedCommunication);
 		CnpOnlineRequest overrides = new CnpOnlineRequest();
 		overrides.setAuthentication(new Authentication());
@@ -310,6 +324,7 @@ public class TestCnpOnline {
 		assertEquals(123L, capturegivenauthresponse.getCnpTxnId());
 		assertEquals("sandbox", capturegivenauthresponse.getLocation());
 	}
+
 
 	@Test
 	public void testCaptureGivenAuthWIthMCC() throws Exception {

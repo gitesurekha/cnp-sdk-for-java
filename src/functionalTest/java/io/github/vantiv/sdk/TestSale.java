@@ -833,7 +833,7 @@ public class TestSale {
 		assertEquals(response.getMessage(), "Approved", response.getMessage());
 		assertEquals("sandbox", response.getLocation());
 	}
-////test for new elements:typeOfDigitalCurrency,conversionAffiliateId  v12.40
+//test for new elements:typeOfDigitalCurrency,conversionAffiliateId  v12.40
 	@Test
 	public void sTestSimpleSalewith12_37() throws Exception{
 		Sale sale = new Sale();

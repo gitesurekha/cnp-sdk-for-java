@@ -528,12 +528,21 @@ public class TestBatchFile {
         contact.setState("MA");
         contact.setEmail("Bob@cnp.com");
 
+        //test for new elements:typeOfDigitalCurrency,conversionAffiliateId in Authorization, sale, captureGivenAuth
+        //and authenticationProtocolVersionType for enum value added 3,4,5,6,7,8,9 in FraudCheckType in Authorization
+        FraudCheckType fraudCheckType1 = new FraudCheckType();
+        fraudCheckType1.setAuthenticationProtocolVersion(new BigInteger("9"));
+        fraudCheckType1.setCustomerIpAddress("127.0.0.1");
+
         Authorization auth = new Authorization();
         auth.setReportGroup("Planets");
         auth.setOrderId("12344");
         auth.setAmount(106L);
         auth.setOrderSource(OrderSourceType.ECOMMERCE);
         auth.setCard(card);
+        auth.setCardholderAuthentication(fraudCheckType1);
+        auth.setTypeOfDigitalCurrency("2");
+        auth.setConversionAffiliateId("ABCD");
         auth.setId("id");
         LodgingInfo lodgingInfo = new LodgingInfo();
         lodgingInfo.setRoomRate(106L);
@@ -550,6 +559,8 @@ public class TestBatchFile {
         sale.setAmount(6000L);
         sale.setOrderSource(OrderSourceType.ECOMMERCE);
         sale.setCard(card);
+        sale.setTypeOfDigitalCurrency("2");
+        sale.setConversionAffiliateId("ABCD");
         sale.setId("id");
         batch.addTransaction(sale);
 
@@ -615,6 +626,8 @@ public class TestBatchFile {
         captureGivenAuth.setAuthInformation(authInformation);
         captureGivenAuth.setOrderSource(OrderSourceType.ECOMMERCE);
         captureGivenAuth.setCard(card);
+        captureGivenAuth.setTypeOfDigitalCurrency("2");
+        captureGivenAuth.setConversionAffiliateId("ABCD");
         captureGivenAuth.setId("id");
         batch.addTransaction(captureGivenAuth);
 

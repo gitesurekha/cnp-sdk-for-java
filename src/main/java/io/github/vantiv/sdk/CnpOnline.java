@@ -36,6 +36,7 @@ public class CnpOnline {
     String encryptedTxn;
     String output;
     String payload;
+    String encryptionKeySequence;
 
     /**
 	 * Construct a CnpOnline using the configuration specified in $HOME/.cnp_SDK_config.properties
@@ -1542,7 +1543,7 @@ public class CnpOnline {
         } finally {
         }
     }
-    public void formEncryptedPayloadRequest(String xmlRequest) {
+    private void formEncryptedPayloadRequest(String xmlRequest) {
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlRequest)));
 
@@ -1566,10 +1567,13 @@ public class CnpOnline {
             //to form encryptedPayload tag
             String payloadTag = String.format("<payload>%s</payload>", payload);
 
-            String keySeq = config.getProperty("oltpEncryptionKeySequence");
-            //   String keySeq =StoreEncryptionKeyHandler.encryptionKeyMap.get("keySequence");
+            if(config.getProperty("oltpEncryptionKeySequence")!= null) {
+                encryptionKeySequence = config.getProperty("oltpEncryptionKeySequence");
+            }else{
+                System.out.println("Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ");
+            }
 
-            String encryptionKeySequenceTag = String.format("<encryptionKeySequence>%s</encryptionKeySequence>", keySeq);
+            String encryptionKeySequenceTag = String.format("<encryptionKeySequence>%s</encryptionKeySequence>", encryptionKeySequence);
 
             String encryptedPayload = String.format(
                     "<encryptedPayload>\n%s\n%s\n</encryptedPayload>",
@@ -1593,15 +1597,12 @@ public class CnpOnline {
         }
     }
 
-    public String processTxnToBeEncrypted (String request ) {
-        //EncryptionKeyRequestHandler handler=new EncryptionKeyRequestHandler();
+    private String processTxnToBeEncrypted (String request ) {
         try {
-        /*    if(StoreEncryptionKeyHandler.encryptionKeyMap.get("encryptionKey")==null){
-                handler.encryptionKeyRequest();
-            }*/
-            encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
-            // encryptedTxn = PgpHelper.encryptString(request,StoreEncryptionKeyHandler.encryptionKeyMap.get("encryptionKey"));
-            System.out.println("The value for public key  is: " +encryptedTxn);
+          if(config.getProperty("oltpEncryptionKeyPath") != null) {
+              encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
+          }else
+            System.out.println("Problem in reading the Public Key...Provide the Encryption key path ");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

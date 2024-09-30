@@ -249,7 +249,7 @@ public class PgpHelper {
         PGPEncryptedDataGenerator encGen = new PGPEncryptedDataGenerator(encryptorBuilder);
         encGen.addMethod(new JcePublicKeyKeyEncryptionMethodGenerator(pgpPublicKey).setProvider("BC"));
 
-        OutputStream encryptedOut = encGen.open(armoredOut,bytes.length );
+        OutputStream encryptedOut = encGen.open(armoredOut,new byte[2097152] );
         encryptedOut.write(bytes);
         encryptedOut.close();
         armoredOut.close();
@@ -264,9 +264,8 @@ public class PgpHelper {
 
         try (OutputStream out = comData.open(bOut)) {
             PGPLiteralDataGenerator lData = new PGPLiteralDataGenerator();
-            try (OutputStream pOut = lData.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE,
-                    plainText.length(), new Date())) {
-                pOut.write(plainText.getBytes());
+            try (OutputStream pOut = lData.open(out, PGPLiteralData.BINARY, PGPLiteralData.CONSOLE, new Date(),new byte[2097152])) {
+                pOut.write(plainText.getBytes(StandardCharsets.UTF_8));
             }        }
         comData.close();
         return bOut.toByteArray();
