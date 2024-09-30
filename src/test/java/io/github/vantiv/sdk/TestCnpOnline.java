@@ -33,7 +33,6 @@ public class TestCnpOnline {
 		cnp = new CnpOnline();
 		config = new Properties();
 		config.load(new FileInputStream(new Configuration().location()));
-		System.out.println(config.getProperty("encrypteOltpPayload"));
 		mockedCommunication = mock(Communication.class);
 	}
 
@@ -51,7 +50,7 @@ public class TestCnpOnline {
 		card.setExpDate("1210");
 		authorization.setCard(card);
 
-		testMethodForAuth();
+		helperMethodForAuth();
 
 		cnp.setCommunication(mockedCommunication);
 		AuthorizationResponse authorize = cnp.authorize(authorization);
@@ -118,7 +117,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000002");
 		card.setExpDate("1210");
 		authorization.setCard(card);
-		testMethodForAuth();
+		helperMethodForAuth();
 		cnp.setCommunication(mockedCommunication);
 		CnpOnlineRequest overrides = new CnpOnlineRequest();
 		overrides.setMerchantId("9001");
@@ -133,7 +132,7 @@ public class TestCnpOnline {
 		reversal.setCnpTxnId(12345678000L);
 		reversal.setAmount(106L);
 		reversal.setPayPalNotes("Notes");
-		testMethodForAuthReversal();
+		helperMethodForAuthReversal();
 		cnp.setCommunication(mockedCommunication);
 		AuthReversalResponse authreversal = cnp.authReversal(reversal);
 		assertEquals(123L, authreversal.getCnpTxnId());
@@ -146,7 +145,7 @@ public class TestCnpOnline {
 		reversal.setCnpTxnId(12345678000L);
 		reversal.setAmount(106L);
 		reversal.setPayPalNotes("Notes");
-		testMethodForAuthReversal();
+		helperMethodForAuthReversal();
 		cnp.setCommunication(mockedCommunication);
 		CnpOnlineRequest overrides = new CnpOnlineRequest();
 		overrides.setMerchantId("54321");
@@ -170,7 +169,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000002");
 		card.setExpDate("1210");
 		authorization.setCard(card);
-		testMethodForAuth();
+		helperMethodForAuth();
 		cnp.setCommunication(mockedCommunication);
 		AuthorizationResponse authorize = cnp.authorize(authorization);
 		assertEquals(123L, authorize.getCnpTxnId());
@@ -194,7 +193,7 @@ public class TestCnpOnline {
 		card.setExpDate("1210");
 		authorization.setCard(card);
 
-		testMethodForAuth();
+		helperMethodForAuth();
 		cnp.setCommunication(mockedCommunication);
 		AuthorizationResponse authorize = cnp.authorize(authorization);
 		assertEquals(123L, authorize.getCnpTxnId());
@@ -218,7 +217,7 @@ public class TestCnpOnline {
 		card.setExpDate("1210");
 		authorization.setCard(card);
 
-		testMethodForAuth();
+		helperMethodForAuth();
 		cnp.setCommunication(mockedCommunication);
 		AuthorizationResponse authorize = cnp.authorize(authorization);
 		assertEquals(123L, authorize.getCnpTxnId());
@@ -233,7 +232,7 @@ public class TestCnpOnline {
 		capture.setCnpTxnId(123456000L);
 		capture.setAmount(106L);
 		capture.setPayPalNotes("Notes");
-		testMethodForCapture();
+		helperMethodForCapture();
 		cnp.setCommunication(mockedCommunication);
 		CaptureResponse captureresponse = cnp.capture(capture);
 		assertEquals(123L, captureresponse.getCnpTxnId());
@@ -246,7 +245,7 @@ public class TestCnpOnline {
 		capture.setCnpTxnId(123456000L);
 		capture.setAmount(106L);
 		capture.setPayPalNotes("Notes");
-		testMethodForCapture();
+		helperMethodForCapture();
 		cnp.setCommunication(mockedCommunication);
 		CnpOnlineRequest overrides = new CnpOnlineRequest();
 		overrides.setAuthentication(new Authentication());
@@ -276,7 +275,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000001");
 		card.setExpDate("1210");
 		capturegivenauth.setCard(card);
-		testMethodForCaptureGivenAuth();
+		helperMethodForCaptureGivenAuth();
 		cnp.setCommunication(mockedCommunication);
 		CaptureGivenAuthResponse capturegivenauthresponse = cnp.captureGivenAuth(capturegivenauth);
 		assertEquals(123L, capturegivenauthresponse.getCnpTxnId());
@@ -347,7 +346,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000001");
 		card.setExpDate("1210");
 		capturegivenauth.setCard(card);
-		testMethodForCaptureGivenAuth();
+		helperMethodForCaptureGivenAuth();
 		cnp.setCommunication(mockedCommunication);
 		CaptureGivenAuthResponse capturegivenauthresponse = cnp.captureGivenAuth(capturegivenauth);
 		assertEquals(123L, capturegivenauthresponse.getCnpTxnId());
@@ -368,7 +367,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000001");
 		card.setExpDate("1210");
 		credit.setCard(card);
-		testMethodForCredit();
+		helperMethodForCredit();
 		cnp.setCommunication(mockedCommunication);
 		CreditResponse creditresponse = cnp.credit(credit);
 		assertEquals(123L, creditresponse.getCnpTxnId());
@@ -388,7 +387,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000001");
 		card.setExpDate("1210");
 		credit.setCard(card);
-		testMethodForCredit();
+		helperMethodForCredit();
 		cnp.setCommunication(mockedCommunication);
 		CreditResponse creditresponse = cnp.credit(credit);
 		assertEquals(123L, creditresponse.getCnpTxnId());
@@ -540,7 +539,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000001");
 		card.setExpDate("1210");
 		forcecapture.setCard(card);
-		testMethodForForceCapture();
+		helperMethodForForceCapture();
 		cnp.setCommunication(mockedCommunication);
 		ForceCaptureResponse forcecaptureresponse = cnp.forceCapture(forcecapture);
 		assertEquals(123L, forcecaptureresponse.getCnpTxnId());
@@ -560,7 +559,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000001");
 		card.setExpDate("1210");
 		forcecapture.setCard(card);
-		testMethodForForceCapture();
+		helperMethodForForceCapture();
 		cnp.setCommunication(mockedCommunication);
 		ForceCaptureResponse forcecaptureresponse = cnp.forceCapture(forcecapture);
 		assertEquals(123L, forcecaptureresponse.getCnpTxnId());
@@ -580,7 +579,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000002");
 		card.setExpDate("1210");
 		sale.setCard(card);
-		testMethodForSale();
+		helperMethodForSale();
 		cnp.setCommunication(mockedCommunication);
 		SaleResponse saleresponse = cnp.sale(sale);
 		assertEquals(123L, saleresponse.getCnpTxnId());
@@ -1078,7 +1077,7 @@ public class TestCnpOnline {
 		c.set(1980, Calendar.APRIL, 14);
 		customerInfo.setDob(c);
 		authorization.setCustomerInfo(customerInfo);
-		testMethodForAuth();
+		helperMethodForAuth();
 		cnp.setCommunication(mockedCommunication);
 		AuthorizationResponse authorize = cnp.authorize(authorization);
 		assertEquals(123L, authorize.getCnpTxnId());
@@ -2629,7 +2628,7 @@ public class TestCnpOnline {
 		sub.getCreateAddOns().add(cat);
 		recuring.setCreateSubscription(sub);
 		sale.setRecurringRequest(recuring);
-		testMethodForSale();
+		helperMethodForSale();
 		cnp.setCommunication(mockedCommunication);
 		SaleResponse saleresponse = cnp.sale(sale);
 		assertEquals(123L, saleresponse.getCnpTxnId());
@@ -2756,7 +2755,7 @@ public class TestCnpOnline {
 		assertEquals(5, advancedFraudResultsType.getTriggeredRules().size());
 		assertEquals("sandbox", fraudCheckResponse.getLocation());
 	}
-	public void testMethodForAuth() {
+	public void helperMethodForAuth() {
 		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
 			when(
 					mockedCommunication
@@ -2775,7 +2774,7 @@ public class TestCnpOnline {
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><authorizationResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></authorizationResponse></cnpOnlineResponse>");
 		}
 	}
-	public void testMethodForAuthReversal() {
+	public void helperMethodForAuthReversal() {
 		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
 			when(
 					mockedCommunication
@@ -2795,7 +2794,7 @@ public class TestCnpOnline {
 		}
 	}
 
-	public void testMethodForCapture() {
+	public void helperMethodForCapture() {
 		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
@@ -2809,7 +2808,7 @@ public class TestCnpOnline {
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><captureResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></captureResponse></cnpOnlineResponse>");
 		}
 	}
-	public void testMethodForCaptureGivenAuth() {
+	public void helperMethodForCaptureGivenAuth() {
 		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
@@ -2824,7 +2823,7 @@ public class TestCnpOnline {
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><captureGivenAuthResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></captureGivenAuthResponse></cnpOnlineResponse>");
 		}
 	}
-	public void testMethodForCredit() {
+	public void helperMethodForCredit() {
 		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
@@ -2839,7 +2838,7 @@ public class TestCnpOnline {
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><creditResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></creditResponse></cnpOnlineResponse>");
 		}
 	}
-	public void testMethodForForceCapture() {
+	public void helperMethodForForceCapture() {
 		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
@@ -2854,7 +2853,7 @@ public class TestCnpOnline {
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><forceCaptureResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></forceCaptureResponse></cnpOnlineResponse>");
 		}
 	}
-	public void testMethodForSale() {
+	public void helperMethodForSale() {
 		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
