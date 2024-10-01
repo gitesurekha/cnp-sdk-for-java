@@ -587,7 +587,6 @@ public class CnpOnline {
 
         request.setTransaction(CnpContext.getObjectFactory().createQueryTransaction(queryTransaction));
         CnpOnlineResponse response = sendQueryTxnToCnp(request, true);
-
         JAXBElement<? extends TransactionTypeWithReportGroup> txnTypeWithReportGroup = response.getTransactionResponse();
         return txnTypeWithReportGroup.getValue();
     }
@@ -1212,9 +1211,12 @@ public class CnpOnline {
             Element root = doc.getDocumentElement();
             Node secondElement = root.getChildNodes().item(1);
 
+            if (secondElement.getNodeName() == "encryptionKeyRequest") {
+                return xmlRequest;
+            }
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");  //
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 
             StringWriter writer = new StringWriter();
@@ -1233,7 +1235,7 @@ public class CnpOnline {
                 encryptionKeySequence = config.getProperty("oltpEncryptionKeySequence");
             }
             else {
-                throw new RuntimeException("Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ");
+                throw new CnpOnlineException("Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ");
             }
 
             String encryptionKeySequenceTag = String.format("<encryptionKeySequence>%s</encryptionKeySequence>", encryptionKeySequence);
@@ -1264,14 +1266,14 @@ public class CnpOnline {
 
     private String processTxnToBeEncrypted(String request) {
         if (config.getProperty("oltpEncryptionKeyPath") == null) {
-            throw new RuntimeException("Problem in reading the Encryption Key path ...Provide the Encryption key path ");
+            throw new CnpOnlineException("Problem in reading the Encryption Key path ...Provide the Encryption key path ");
         }
         else {
             try {
                 encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
             }
             catch (IOException | PGPException e) {
-                throw new RuntimeException("\"There was an exception while reading the key from Specified path" +
+                throw new CnpOnlineException("\"There was an exception while reading the key from Specified path" +
                         "\n If the Path is correct check for keys correctness ", e);
             }
         }
