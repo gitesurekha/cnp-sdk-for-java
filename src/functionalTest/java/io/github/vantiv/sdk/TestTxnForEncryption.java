@@ -15,7 +15,7 @@ public class TestTxnForEncryption {
     public void beforeClass() throws IOException {
         Properties config = new Properties();
         config.load(new FileInputStream(new Configuration().location()));
-        config.setProperty("encrypteOltpPayload", "true");
+        config.setProperty("oltpEncryptionPayload", "true");
         config.setProperty("oltpEncryptionKeySequence", "10000");
         config.setProperty("oltpEncryptionKeyPath","/home/buildvwr/pgpKeyOltp/cnpOltpEncryptionKey.asc");
         cnp = new CnpOnline(config);

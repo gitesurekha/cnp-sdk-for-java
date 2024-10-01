@@ -231,8 +231,7 @@ public class PgpHelper {
 
         return new EncryptedOutputStream(encOut, fileOutputStream, pOut);
     }
-    public static String encryptString(String plainText, String publicKey) throws Exception {
-        //  System.out.println("The value for public key  is: " + handler.encryptionKeyMap.get("encryptionKey"));
+    public static String encryptString(String plainText, String publicKey)  throws IOException, PGPException {
         ByteArrayOutputStream encOut = new ByteArrayOutputStream();
         ArmoredOutputStream armoredOut = new ArmoredOutputStream(encOut);
         armoredOut.setHeader("Version", "BCPG v1.78");

@@ -21,6 +21,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import io.github.vantiv.sdk.generate.*;
 import io.github.vantiv.sdk.generate.Void;
+
+import org.bouncycastle.openpgp.PGPException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -94,7 +96,7 @@ public class CnpOnline {
 		fillInReportGroup(auth);
 
 		request.setTransaction(CnpContext.getObjectFactory().createAuthorization(auth));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -114,7 +116,7 @@ public class CnpOnline {
 		fillInReportGroup(reversal);
 
 		request.setTransaction(CnpContext.getObjectFactory().createAuthReversal(reversal));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -134,7 +136,7 @@ public class CnpOnline {
 		fillInReportGroup(capture);
 
 		request.setTransaction(CnpContext.getObjectFactory().createCapture(capture));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -154,7 +156,7 @@ public class CnpOnline {
 		fillInReportGroup(captureGivenAuth);
 
 		request.setTransaction(CnpContext.getObjectFactory().createCaptureGivenAuth(captureGivenAuth));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -174,7 +176,7 @@ public class CnpOnline {
 		fillInReportGroup(credit);
 
 		request.setTransaction(CnpContext.getObjectFactory().createCredit(credit));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -194,7 +196,7 @@ public class CnpOnline {
 		fillInReportGroup(echeckcredit);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckCredit(echeckcredit));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -214,7 +216,7 @@ public class CnpOnline {
 		fillInReportGroup(echeckRedeposit);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckRedeposit(echeckRedeposit));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -234,7 +236,7 @@ public class CnpOnline {
 		fillInReportGroup(echeckSale);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckSale(echeckSale));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -254,7 +256,7 @@ public class CnpOnline {
 		fillInReportGroup(echeckVerification);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckVerification(echeckVerification));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -274,7 +276,7 @@ public class CnpOnline {
 		fillInReportGroup(forceCapture);
 
 		request.setTransaction(CnpContext.getObjectFactory().createForceCapture(forceCapture));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -294,7 +296,7 @@ public class CnpOnline {
 		fillInReportGroup(sale);
 
 		request.setTransaction(CnpContext.getObjectFactory().createSale(sale));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -302,19 +304,19 @@ public class CnpOnline {
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (SaleResponse)newresponse.getValue();
 	}
-	
+
 	public FraudCheckResponse fraudCheck(FraudCheck fraudCheck) throws CnpOnlineException {
 	    CnpOnlineRequest request = createCnpOnlineRequest();
 	    return fraudCheck(fraudCheck, request);
 	}
-	
+
 	public FraudCheckResponse fraudCheck(FraudCheck fraudCheck, CnpOnlineRequest overrides) throws CnpOnlineException {
 	      CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 	    fillInReportGroup(fraudCheck);
-	    
+
 	    request.setTransaction(CnpContext.getObjectFactory().createFraudCheck(fraudCheck));
-	    if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+	    if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -334,7 +336,7 @@ public class CnpOnline {
 		fillInReportGroup(tokenRequest);
 
 		request.setTransaction(CnpContext.getObjectFactory().createRegisterTokenRequest(tokenRequest));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -354,7 +356,7 @@ public class CnpOnline {
 		fillInReportGroup(v);
 
 		request.setTransaction(CnpContext.getObjectFactory().createVoid(v));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -374,7 +376,7 @@ public class CnpOnline {
 		fillInReportGroup(echeckVoid);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckVoid(echeckVoid));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -394,7 +396,7 @@ public class CnpOnline {
 		fillInReportGroup(update);
 
 		request.setTransaction(CnpContext.getObjectFactory().createUpdateCardValidationNumOnToken(update));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -413,7 +415,7 @@ public class CnpOnline {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createCancelSubscription(cancellation));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -432,7 +434,7 @@ public class CnpOnline {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createUpdateSubscription(update));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -451,7 +453,7 @@ public class CnpOnline {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createCreatePlan(create));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -470,7 +472,7 @@ public class CnpOnline {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createUpdatePlan(update));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -490,7 +492,7 @@ public class CnpOnline {
         fillInReportGroup(activate);
 
         request.setTransaction(CnpContext.getObjectFactory().createActivate(activate));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -510,7 +512,7 @@ public class CnpOnline {
         fillInReportGroup(deactivate);
 
         request.setTransaction(CnpContext.getObjectFactory().createDeactivate(deactivate));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -530,7 +532,7 @@ public class CnpOnline {
         fillInReportGroup(load);
 
         request.setTransaction(CnpContext.getObjectFactory().createLoad(load));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -550,7 +552,7 @@ public class CnpOnline {
         fillInReportGroup(unload);
 
         request.setTransaction(CnpContext.getObjectFactory().createUnload(unload));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -570,7 +572,7 @@ public class CnpOnline {
         fillInReportGroup(balanceInquiry);
 
         request.setTransaction(CnpContext.getObjectFactory().createBalanceInquiry(balanceInquiry));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -590,7 +592,7 @@ public class CnpOnline {
         fillInReportGroup(activateReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createActivateReversal(activateReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -610,7 +612,7 @@ public class CnpOnline {
         fillInReportGroup(deactivateReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createDeactivateReversal(deactivateReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -630,7 +632,7 @@ public class CnpOnline {
         fillInReportGroup(loadReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createLoadReversal(loadReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -650,7 +652,7 @@ public class CnpOnline {
         fillInReportGroup(unloadReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createUnloadReversal(unloadReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -670,7 +672,7 @@ public class CnpOnline {
         fillInReportGroup(refundReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createRefundReversal(refundReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -690,7 +692,7 @@ public class CnpOnline {
         fillInReportGroup(depositReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createDepositReversal(depositReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -710,7 +712,7 @@ public class CnpOnline {
 	    fillInReportGroup(depositTransactionReversal);
 
 	    request.setTransaction(CnpContext.getObjectFactory().createDepositTransactionReversal(depositTransactionReversal));
-	    if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+	    if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -730,7 +732,7 @@ public class CnpOnline {
         fillInReportGroup(transactionReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createRefundTransactionReversal(transactionReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -750,7 +752,7 @@ public class CnpOnline {
         fillInReportGroup(queryTransaction);
 
         request.setTransaction(CnpContext.getObjectFactory().createQueryTransaction(queryTransaction));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendQueryTxnToCnpWithEncryption(request,true);
         }   else {
             response = sendQueryTxnToCnp(request, true);
@@ -758,19 +760,19 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> txnTypeWithReportGroup = response.getTransactionResponse();
         return txnTypeWithReportGroup.getValue();
     }
-    
+
     public GiftCardCaptureResponse giftCardCapture(GiftCardCapture giftCardCapture) {
     	CnpOnlineRequest request = createCnpOnlineRequest();
         return giftCardCapture(giftCardCapture, request);
     }
-    
+
     public GiftCardCaptureResponse giftCardCapture(GiftCardCapture giftCardCapture, CnpOnlineRequest overrides) {
     	  CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardCapture);
 
         request.setTransaction(CnpContext.getObjectFactory().createGiftCardCapture(giftCardCapture));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -778,19 +780,19 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (GiftCardCaptureResponse)newresponse.getValue();
     }
-    
+
     public GiftCardAuthReversalResponse giftCardAuthReversal(GiftCardAuthReversal giftCardAuthReversal) {
     	CnpOnlineRequest request = createCnpOnlineRequest();
         return giftCardAuthReversal(giftCardAuthReversal, request);
     }
-    
+
     public GiftCardAuthReversalResponse giftCardAuthReversal(GiftCardAuthReversal giftCardAuthReversal, CnpOnlineRequest overrides) {
     	  CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardAuthReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createGiftCardAuthReversal(giftCardAuthReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -798,19 +800,19 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (GiftCardAuthReversalResponse)newresponse.getValue();
     }
-    
+
     public GiftCardCreditResponse giftCardCredit(GiftCardCredit giftCardCredit) {
     	CnpOnlineRequest request = createCnpOnlineRequest();
         return giftCardCredit(giftCardCredit, request);
     }
-    
+
     public GiftCardCreditResponse giftCardCredit(GiftCardCredit giftCardCredit, CnpOnlineRequest overrides) {
     	  CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createGiftCardCredit(giftCardCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -823,14 +825,14 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return payFacCredit(payFacCredit, request);
     }
-    
+
     public PayFacCreditResponse payFacCredit(PayFacCredit payFacCredit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payFacCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayFacCredit(payFacCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -843,14 +845,14 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return payFacDebit(payFacDebit, request);
     }
-    
+
     public PayFacDebitResponse payFacDebit(PayFacDebit payFacDebit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payFacDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayFacDebit(payFacDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -863,14 +865,14 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return submerchantCredit(submerchantCredit, request);
     }
-    
+
     public SubmerchantCreditResponse submerchantCredit(SubmerchantCredit submerchantCredit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(submerchantCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createSubmerchantCredit(submerchantCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -883,14 +885,14 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return submerchantDebit(submerchantDebit, request);
     }
-    
+
     public SubmerchantDebitResponse submerchantDebit(SubmerchantDebit submerchantDebit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(submerchantDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createSubmerchantDebit(submerchantDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -898,19 +900,19 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (SubmerchantDebitResponse)newresponse.getValue();
     }
-    
+
     public ReserveCreditResponse submerchantCredit(ReserveCredit reserveCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return reserveCredit(reserveCredit, request);
     }
-    
+
     public ReserveCreditResponse reserveCredit(ReserveCredit reserveCredit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(reserveCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createReserveCredit(reserveCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -923,14 +925,14 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return reserveDebit(reserveDebit, request);
     }
-    
+
     public ReserveDebitResponse reserveDebit(ReserveDebit reserveDebit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(reserveDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createReserveDebit(reserveDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -943,14 +945,14 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return fundingInstructionVoid(fundingInstructionVoid, request);
     }
-    
+
     public FundingInstructionVoidResponse fundingInstructionVoid(FundingInstructionVoid fundingInstructionVoid, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(fundingInstructionVoid);
 
         request.setTransaction(CnpContext.getObjectFactory().createFundingInstructionVoid(fundingInstructionVoid));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -958,19 +960,19 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (FundingInstructionVoidResponse)newresponse.getValue();
     }
-    
+
     public VendorCreditResponse vendorCredit(VendorCredit vendorCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return vendorCredit(vendorCredit, request);
     }
-    
+
     public VendorCreditResponse vendorCredit(VendorCredit vendorCredit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(vendorCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createVendorCredit(vendorCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -995,7 +997,7 @@ public class CnpOnline {
         fillInReportGroup(vendorDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createVendorDebit(vendorDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1008,14 +1010,14 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return physicalCheckCredit(physicalCheckCredit, request);
     }
-    
+
     public PhysicalCheckCreditResponse physicalCheckCredit(PhysicalCheckCredit physicalCheckCredit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(physicalCheckCredit);
-        
+
         request.setTransaction(CnpContext.getObjectFactory().createPhysicalCheckCredit(physicalCheckCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1023,19 +1025,19 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PhysicalCheckCreditResponse)newresponse.getValue();
     }
-    
+
     public PhysicalCheckDebitResponse physicalCheckDebit(PhysicalCheckDebit physicalCheckDebit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return physicalCheckDebit(physicalCheckDebit, request);
     }
-    
+
     public PhysicalCheckDebitResponse physicalCheckDebit(PhysicalCheckDebit physicalCheckDebit, CnpOnlineRequest overrides) {
           CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(physicalCheckDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPhysicalCheckDebit(physicalCheckDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1055,7 +1057,7 @@ public class CnpOnline {
 		fillInReportGroup(fastAccessFunding);
 
 		request.setTransaction(CnpContext.getObjectFactory().createFastAccessFunding(fastAccessFunding));
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1077,7 +1079,7 @@ public class CnpOnline {
 	    fillInReportGroup(translateToLowValueTokenRequest);
 
         request.setTransaction(CnpContext.getObjectFactory().createTranslateToLowValueTokenRequest(translateToLowValueTokenRequest));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1097,7 +1099,7 @@ public class CnpOnline {
         fillInReportGroup(customerCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createCustomerCredit(customerCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1117,7 +1119,7 @@ public class CnpOnline {
         fillInReportGroup(customerDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createCustomerDebit(customerDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1137,7 +1139,7 @@ public class CnpOnline {
         fillInReportGroup(payoutOrgCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayoutOrgCredit(payoutOrgCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1157,7 +1159,7 @@ public class CnpOnline {
         fillInReportGroup(payoutOrgDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayoutOrgDebit(payoutOrgDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1177,7 +1179,7 @@ public class CnpOnline {
         fillInReportGroup(finicityUrl);
 
         request.setTransaction(CnpContext.getObjectFactory().createFinicityUrlRequest(finicityUrl));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1196,7 +1198,7 @@ public class CnpOnline {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(finicityAccount);
         request.setTransaction(CnpContext.getObjectFactory().createFinicityAccountRequest(finicityAccount));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1216,7 +1218,7 @@ public class CnpOnline {
         fillInReportGroup(bnplAuth);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLAuthorizationRequest(bnplAuth));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1235,7 +1237,7 @@ public class CnpOnline {
         fillInReportGroup(bnplCapture);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLCaptureRequest(bnplCapture));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1255,7 +1257,7 @@ public class CnpOnline {
         fillInReportGroup(bnplRefund);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLRefundRequest(bnplRefund));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1275,7 +1277,7 @@ public class CnpOnline {
         fillInReportGroup(bnplCancle);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLCancelRequest(bnplCancle));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1295,7 +1297,7 @@ public class CnpOnline {
         fillInReportGroup(bnplInquiry);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLInquiryRequest(bnplInquiry));
-        if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))){
+        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
             response = sendToCnpForEncryption(request);
         }   else {
             response = sendToCnp(request);
@@ -1507,10 +1509,10 @@ public class CnpOnline {
             if (this.removeStubs) {
                 xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
             }
-            //   xmlRequest = sw.toString().trim().replaceAll("^([\\W]+)<", "<");
+
             //Get the specific txn tag to be sent for encryption logic
-            formEncryptedPayloadRequest(xmlRequest);
-            //	System.out.println("config-------------"+config+"\n\n\n");
+            replaceWithEncryptedPayload(xmlRequest);
+
             String xmlResponse = communication.requestToServer(newXmlRequest, config);
             /**
              * This was added to accommodate an issue with OpenAccess and possibly VAP where the XML namespace returned
@@ -1543,7 +1545,7 @@ public class CnpOnline {
         } finally {
         }
     }
-    private void formEncryptedPayloadRequest(String xmlRequest) {
+    private void replaceWithEncryptedPayload(String xmlRequest) {
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlRequest)));
 
@@ -1570,7 +1572,7 @@ public class CnpOnline {
             if(config.getProperty("oltpEncryptionKeySequence")!= null) {
                 encryptionKeySequence = config.getProperty("oltpEncryptionKeySequence");
             }else{
-                System.out.println("Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ");
+                throw new RuntimeException("Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ");
             }
 
             String encryptionKeySequenceTag = String.format("<encryptionKeySequence>%s</encryptionKeySequence>", encryptionKeySequence);
@@ -1597,17 +1599,22 @@ public class CnpOnline {
         }
     }
 
-    private String processTxnToBeEncrypted (String request ) {
-        try {
-          if(config.getProperty("oltpEncryptionKeyPath") != null) {
-              encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
-          }else
-            System.out.println("Problem in reading the Public Key...Provide the Encryption key path ");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    private String processTxnToBeEncrypted (String request )  {
+        if (config.getProperty("oltpEncryptionKeyPath") == null) {
+            throw new RuntimeException("Problem in reading the Encryption Key path ...Provide the Encryption key path ");
         }
-        return encryptedTxn;
-    }
+        else{
+            try {
+                encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
+            }
+            catch (IOException  | PGPException e ) {
+                throw new RuntimeException(e);
+                //throw new RuntimeException("\"There was an exception while reading the key from Specified path "+
+               //         "\n If the Path is correct check for keys correctness " ,e);
+            }
+        }
+            return encryptedTxn;
+        }
 
     private CnpOnlineResponse sendQueryTxnToCnpWithEncryption (CnpOnlineRequest request, Boolean retrySite) throws
             CnpOnlineException {
@@ -1624,8 +1631,9 @@ public class CnpOnline {
             if (this.removeStubs) {
                 xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
             }
-            formEncryptedPayloadRequest(xmlRequest);
-            //	System.out.println("config-------------"+config+"\n\n\n");
+
+            replaceWithEncryptedPayload(xmlRequest);
+
             if (retrySite)
                 config.setProperty("url", config.getProperty("multiSiteUrl1", config.getProperty("url")));
             else
@@ -1686,7 +1694,6 @@ public class CnpOnline {
                 response = sendQueryTxnToCnp(request, false);
                 return response;
             }
-            System.out.println("Exception is"+ ex);
             throw new CnpOnlineException("Original transaction not found - Site/s unavailable");
         } finally {
         }

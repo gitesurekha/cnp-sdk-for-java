@@ -183,7 +183,7 @@ public class TestQueryTransaction {
         cnpProperty.setProperty("proxyPort", "8080");
         cnpProperty.setProperty("multiSiteUrl1",url1);
         cnpProperty.setProperty("multiSiteUrl2",url2);
-        cnpProperty.setProperty("encrypteOltpPayload","true");
+        cnpProperty.setProperty("oltpEncryptionPayload","true");
         cnpProperty.setProperty("oltpEncryptionKeySequence","10000");
         cnpProperty.setProperty("oltpEncryptionKeyPath","/home/buildvwr/pgpKeyOltp/cnpOltpEncryptionKey.asc");
         return cnpProperty;

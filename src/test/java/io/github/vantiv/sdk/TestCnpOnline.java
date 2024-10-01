@@ -25,7 +25,7 @@ public class TestCnpOnline {
 
 	private CnpOnline cnp;
 	private Properties config;
-	boolean encrypteOltpPayload;
+	boolean oltpEncryptionPayload;
 	Communication mockedCommunication;
 
 	@Before
@@ -83,7 +83,7 @@ public class TestCnpOnline {
 		wallet.setWalletSourceTypeId("123");
 		authorization.setWallet(wallet);
 
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><authorizationResponse><cnpTxnId>123</cnpTxnId><applepayResponse><applicationPrimaryAccountNumber>123455</applicationPrimaryAccountNumber><transactionAmount>106</transactionAmount></applepayResponse><location>sandbox</location></authorizationResponse></cnpOnlineResponse>");
@@ -301,7 +301,7 @@ public class TestCnpOnline {
 		card.setExpDate("1210");
 		capturegivenauth.setCard(card);
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><captureGivenAuthResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></captureGivenAuthResponse></cnpOnlineResponse>");
@@ -403,7 +403,7 @@ public class TestCnpOnline {
 		echeckcredit.setCnpTxnId(123456789101112L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><echeckCreditResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></echeckCreditResponse></cnpOnlineResponse>");
@@ -428,7 +428,7 @@ public class TestCnpOnline {
 		echeckredeposit.setCnpTxnId(123456L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><echeckRedepositResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></echeckRedepositResponse></cnpOnlineResponse>");
@@ -469,7 +469,7 @@ public class TestCnpOnline {
 		echecksale.setBillToAddress(contact);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><echeckSalesResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></echeckSalesResponse></cnpOnlineResponse>");
@@ -508,7 +508,7 @@ public class TestCnpOnline {
 		echeckverification.setBillToAddress(contact);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><echeckVerificationResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></echeckVerificationResponse></cnpOnlineResponse>");
@@ -600,7 +600,7 @@ public class TestCnpOnline {
 		sale.setCard(card);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><saleResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></saleResponse></cnpOnlineResponse>");
@@ -648,7 +648,7 @@ public class TestCnpOnline {
 		sale.setSepaDirectDebit(sepa);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><saleResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></saleResponse></cnpOnlineResponse>");
@@ -694,7 +694,7 @@ public class TestCnpOnline {
 		card.setNumber("4100100000000002");
 		card.setExpDate("1210");
 		sale.setCard(card);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='12.11' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><saleResponse><cnpTxnId>123</cnpTxnId><accountUpdater><accountUpdateSource>R</accountUpdateSource></accountUpdater><location>sandbox</location></saleResponse></cnpOnlineResponse>");
@@ -726,7 +726,7 @@ public class TestCnpOnline {
 		card.setNumber("4100100000000002");
 		card.setExpDate("1210");
 		sale.setCard(card);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='12.11' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><saleResponse><cnpTxnId>123</cnpTxnId><accountUpdater><accountUpdateSource>N</accountUpdateSource></accountUpdater><location>sandbox</location></saleResponse></cnpOnlineResponse>");
@@ -772,7 +772,7 @@ public class TestCnpOnline {
 		sale.setWallet(wallet);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><saleResponse><cnpTxnId>123</cnpTxnId><applepayResponse><applicationPrimaryAccountNumber>123455</applicationPrimaryAccountNumber></applepayResponse><location>sandbox</location></saleResponse></cnpOnlineResponse>");
@@ -805,7 +805,7 @@ public class TestCnpOnline {
 		card.setExpDate("1210");
 		sale.setCard(card);
 		sale.setMerchantCategoryCode("1567");
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='12.11' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><saleResponse><cnpTxnId>123</cnpTxnId><accountUpdater><accountUpdateSource>N</accountUpdateSource></accountUpdater><location>sandbox</location></saleResponse></cnpOnlineResponse>");
@@ -834,7 +834,7 @@ public class TestCnpOnline {
 		token.setAccountNumber("1233456789103801");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><registerTokenResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></registerTokenResponse></cnpOnlineResponse>");
@@ -870,7 +870,7 @@ public class TestCnpOnline {
 		token.setApplepay(applepayType);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><registerTokenResponse><cnpTxnId>123</cnpTxnId><applepayResponse><applicationPrimaryAccountNumber>123455</applicationPrimaryAccountNumber></applepayResponse><location>sandbox</location></registerTokenResponse></cnpOnlineResponse>");
@@ -905,7 +905,7 @@ public class TestCnpOnline {
 		authorization.setCard(card);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(
 					mockedCommunication
 							.requestToServer(
@@ -945,7 +945,7 @@ public class TestCnpOnline {
 		authorization.setCard(card);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(
 					mockedCommunication
 							.requestToServer(
@@ -982,7 +982,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000002");
 		card.setExpDate("1210");
 		authorization.setCard(card);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><authorizationResponse reportGroup='Default Report Group'><location>sandbox</location></authorizationResponse></cnpOnlineResponse>");
@@ -1015,7 +1015,7 @@ public class TestCnpOnline {
 		card.setNumber("4100000000000002");
 		card.setExpDate("1210");
 		authorization.setCard(card);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><authorizationResponse reportGroup='Default Report Group'><location>sandbox</location></authorizationResponse></cnpOnlineResponse>");
@@ -1041,7 +1041,7 @@ public class TestCnpOnline {
 		echeckvoid.setCnpTxnId(12345L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><echeckVoidResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></echeckVoidResponse></cnpOnlineResponse>");
@@ -1118,7 +1118,7 @@ public class TestCnpOnline {
 		cancel.setSubscriptionId(12345L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.20' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><cancelSubscriptionResponse><subscriptionId>12345</subscriptionId></cancelSubscriptionResponse></cnpOnlineResponse>");
@@ -1142,7 +1142,7 @@ public class TestCnpOnline {
 		cancel.setSubscriptionId(12345L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.20' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><cancelSubscriptionResponse><subscriptionId>12345</subscriptionId></cancelSubscriptionResponse></cnpOnlineResponse>");
@@ -1183,7 +1183,7 @@ public class TestCnpOnline {
 		update.setSubscriptionId(12345L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.20' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><updateSubscriptionResponse><subscriptionId>12345</subscriptionId></updateSubscriptionResponse></cnpOnlineResponse>");
@@ -1222,7 +1222,7 @@ public class TestCnpOnline {
 		update.setSubscriptionId(12345L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.20' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><updateSubscriptionResponse><subscriptionId>12345</subscriptionId></updateSubscriptionResponse></cnpOnlineResponse>");
@@ -1249,7 +1249,7 @@ public class TestCnpOnline {
 		update.setPlanCode("abc");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.20' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><updatePlanResponse><planCode>abc</planCode></updatePlanResponse></cnpOnlineResponse>");
@@ -1274,7 +1274,7 @@ public class TestCnpOnline {
 		update.setPlanCode("abc");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.20' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><updatePlanResponse><planCode>abc</planCode></updatePlanResponse></cnpOnlineResponse>");
@@ -1301,7 +1301,7 @@ public class TestCnpOnline {
 		create.setActive(true);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><createPlanResponse><planCode>abc</planCode></createPlanResponse></cnpOnlineResponse>");
@@ -1326,7 +1326,7 @@ public class TestCnpOnline {
 		create.setActive(true);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><createPlanResponse><planCode>abc</planCode></createPlanResponse></cnpOnlineResponse>");
@@ -1352,7 +1352,7 @@ public class TestCnpOnline {
 		activate.setAmount(100L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><activateResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></activateResponse></cnpOnlineResponse>");
@@ -1377,7 +1377,7 @@ public class TestCnpOnline {
 		activate.setAmount(100L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><activateResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></activateResponse></cnpOnlineResponse>");
@@ -1404,7 +1404,7 @@ public class TestCnpOnline {
 		deactivate.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><deactivateResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></deactivateResponse></cnpOnlineResponse>");
@@ -1429,7 +1429,7 @@ public class TestCnpOnline {
 		deactivate.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><deactivateResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></deactivateResponse></cnpOnlineResponse>");
@@ -1456,7 +1456,7 @@ public class TestCnpOnline {
 		load.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><loadResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></loadResponse></cnpOnlineResponse>");
@@ -1481,7 +1481,7 @@ public class TestCnpOnline {
 		load.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><loadResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></loadResponse></cnpOnlineResponse>");
@@ -1508,7 +1508,7 @@ public class TestCnpOnline {
 		unload.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><unloadResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></unloadResponse></cnpOnlineResponse>");
@@ -1533,7 +1533,7 @@ public class TestCnpOnline {
 		unload.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><unloadResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></unloadResponse></cnpOnlineResponse>");
@@ -1560,7 +1560,7 @@ public class TestCnpOnline {
 		balanceInquiry.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><balanceInquiryResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></balanceInquiryResponse></cnpOnlineResponse>");
@@ -1585,7 +1585,7 @@ public class TestCnpOnline {
 		balanceInquiry.setOrderId("123");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><balanceInquiryResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></balanceInquiryResponse></cnpOnlineResponse>");
@@ -1625,7 +1625,7 @@ public class TestCnpOnline {
 		activateReversal.setOriginalTxnTime(timestamp);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><activateReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></activateReversalResponse></cnpOnlineResponse>");
@@ -1664,7 +1664,7 @@ public class TestCnpOnline {
 		activateReversal.setCnpTxnId(123L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><activateReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></activateReversalResponse></cnpOnlineResponse>");
@@ -1709,7 +1709,7 @@ public class TestCnpOnline {
 		deactivateReversal.setOriginalTxnTime(timestamp);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><deactivateReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></deactivateReversalResponse></cnpOnlineResponse>");
@@ -1748,7 +1748,7 @@ public class TestCnpOnline {
 		deactivateReversal.setCnpTxnId(123L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><deactivateReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></deactivateReversalResponse></cnpOnlineResponse>");
@@ -1794,7 +1794,7 @@ public class TestCnpOnline {
 		loadReversal.setOriginalTxnTime(timestamp);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><loadReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></loadReversalResponse></cnpOnlineResponse>");
@@ -1834,7 +1834,7 @@ public class TestCnpOnline {
 		loadReversal.setCnpTxnId(123L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><loadReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></loadReversalResponse></cnpOnlineResponse>");
@@ -1879,7 +1879,7 @@ public class TestCnpOnline {
 		unloadReversal.setOriginalTxnTime(timestamp);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><unloadReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></unloadReversalResponse></cnpOnlineResponse>");
@@ -1918,7 +1918,7 @@ public class TestCnpOnline {
 		unloadReversal.setCnpTxnId(123L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><unloadReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></unloadReversalResponse></cnpOnlineResponse>");
@@ -1967,7 +1967,7 @@ public class TestCnpOnline {
 		refundReversal.setOriginalSequenceNumber("222222");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><refundReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></refundReversalResponse></cnpOnlineResponse>");
@@ -2007,7 +2007,7 @@ public class TestCnpOnline {
 		refundReversal.setCnpTxnId(123L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><refundReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></refundReversalResponse></cnpOnlineResponse>");
@@ -2055,7 +2055,7 @@ public class TestCnpOnline {
 		depositReversal.setOriginalSequenceNumber("111111");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><depositReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></depositReversalResponse></cnpOnlineResponse>");
@@ -2095,7 +2095,7 @@ public class TestCnpOnline {
 		depositReversal.setCnpTxnId(123L);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.21' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><depositReversalResponse><cnpTxnId>123456</cnpTxnId><location>sandbox</location></depositReversalResponse></cnpOnlineResponse>");
@@ -2143,7 +2143,7 @@ public class TestCnpOnline {
 		gcAuthReversal.setOriginalSequenceNumber("222222");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version=\"12.0\" xmlns=\"http://www.vantivcnp.com/schema\" response=\"0\" message=\"Valid Format\">"
@@ -2225,7 +2225,7 @@ public class TestCnpOnline {
 		gcAuthReversal.setOriginalSequenceNumber("222222");
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version=\"12.0\" xmlns=\"http://www.vantivcnp.com/schema\" response=\"0\" message=\"Valid Format\">"
@@ -2309,7 +2309,7 @@ public class TestCnpOnline {
 		gcCapture.setOriginalTxnTime(timestamp);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version=\"12.0\" xmlns=\"http://www.vantivcnp.com/schema\" response=\"0\" message=\"Valid Format\">"
@@ -2389,7 +2389,7 @@ public class TestCnpOnline {
 		gcCapture.setOriginalTxnTime(timestamp);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version=\"12.0\" xmlns=\"http://www.vantivcnp.com/schema\" response=\"0\" message=\"Valid Format\">"
@@ -2468,7 +2468,7 @@ public class TestCnpOnline {
 		gcCredit.setCard(giftCard);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version=\"12.0\" xmlns=\"http://www.vantivcnp.com/schema\" response=\"0\" message=\"Valid Format\">"
@@ -2541,7 +2541,7 @@ public class TestCnpOnline {
 		gcCredit.setCard(giftCard);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version=\"12.0\" xmlns=\"http://www.vantivcnp.com/schema\" response=\"0\" message=\"Valid Format\">"
@@ -2645,7 +2645,7 @@ public class TestCnpOnline {
 		queryTransaction.setOrigActionType(ActionTypeEnum.A);
 
 
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn("<cnpOnlineResponse version='12.0' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><queryTransactionResponse id='1234' customerId='customerId'> <response>150</response> <responseTime>2015-04-14T12:37:26</responseTime> <message>Original transaction not found</message><matchCount>0</matchCount><location>sandbox</location></queryTransactionResponse></cnpOnlineResponse>");
 		} else {
@@ -2671,7 +2671,7 @@ public class TestCnpOnline {
 		queryTransaction.setOrigActionType(ActionTypeEnum.A);
 
 
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn("<cnpOnlineResponse version='12.0' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><queryTransactionResponse id='findId' customerId='customerId'> <response>150</response> <responseTime>2015-04-14T12:37:26</responseTime> " +
 							"<message>Original transaction found</message><matchCount>1</matchCount>" +
@@ -2704,7 +2704,7 @@ public class TestCnpOnline {
 		queryTransaction.setOrigId("org1");
 		queryTransaction.setOrigActionType(ActionTypeEnum.A);
 
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn("<cnpOnlineResponse version='12.0' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><queryTransactionUnavailableResponse id='1234' customerId='customerId'><cnpTxnId>123456</cnpTxnId> <response>123</response> <message>Sample message</message><location>sandbox</location></queryTransactionUnavailableResponse></cnpOnlineResponse>");
 
@@ -2733,7 +2733,7 @@ public class TestCnpOnline {
 		fraudCheck.setAdvancedFraudChecks(advancedFraudChecks);
 
 		Communication mockedCommunication = mock(Communication.class);
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='12.0' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><fraudCheckResponse id='' reportGroup='Default Report Group' customerId=''><cnpTxnId>602413782865196123</cnpTxnId><response>123</response><responseTime>2016-07-11T15:12:34</responseTime><message>Call Discover</message><advancedFraudResults><deviceReviewStatus>pass</deviceReviewStatus><deviceReputationScore>42</deviceReputationScore><triggeredRule>triggered_rule_1</triggeredRule><triggeredRule>triggered_rule_2</triggeredRule><triggeredRule>triggered_rule_3</triggeredRule><triggeredRule>triggered_rule_4</triggeredRule><triggeredRule>triggered_rule_5</triggeredRule></advancedFraudResults><location>sandbox</location></fraudCheckResponse></cnpOnlineResponse>");
@@ -2756,7 +2756,7 @@ public class TestCnpOnline {
 		assertEquals("sandbox", fraudCheckResponse.getLocation());
 	}
 	public void helperMethodForAuth() {
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(
 					mockedCommunication
 							.requestToServer(
@@ -2775,7 +2775,7 @@ public class TestCnpOnline {
 		}
 	}
 	public void helperMethodForAuthReversal() {
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(
 					mockedCommunication
 							.requestToServer(
@@ -2795,7 +2795,7 @@ public class TestCnpOnline {
 	}
 
 	public void helperMethodForCapture() {
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><captureResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></captureResponse></cnpOnlineResponse>");
@@ -2809,7 +2809,7 @@ public class TestCnpOnline {
 		}
 	}
 	public void helperMethodForCaptureGivenAuth() {
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><captureGivenAuthResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></captureGivenAuthResponse></cnpOnlineResponse>");
@@ -2824,7 +2824,7 @@ public class TestCnpOnline {
 		}
 	}
 	public void helperMethodForCredit() {
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><creditResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></creditResponse></cnpOnlineResponse>");
@@ -2839,7 +2839,7 @@ public class TestCnpOnline {
 		}
 	}
 	public void helperMethodForForceCapture() {
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><forceCaptureResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></forceCaptureResponse></cnpOnlineResponse>");
@@ -2854,7 +2854,7 @@ public class TestCnpOnline {
 		}
 	}
 	public void helperMethodForSale() {
-		if ("true".equalsIgnoreCase(config.getProperty("encrypteOltpPayload"))) {
+		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
 			when(mockedCommunication.requestToServer(matches("(?s).*?<cnpOnlineRequest.*?<encryptedPayload>(.*?)</encryptedPayload>.*?\n"), any(Properties.class)))
 					.thenReturn(
 							"<cnpOnlineResponse version='8.10' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'><saleResponse><cnpTxnId>123</cnpTxnId><location>sandbox</location></saleResponse></cnpOnlineResponse>");
