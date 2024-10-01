@@ -34,11 +34,11 @@ public class CnpOnline {
 	private Properties config;
 	private Communication communication;
 	private Boolean removeStubs = false;
-    private String newXmlRequest;
-    String encryptedTxn;
-    String output;
-    String payload;
-    String encryptionKeySequence;
+    private String xmlRequest;
+    private String encryptedTxn;
+    private String output;
+    private String payload;
+    private String encryptionKeySequence;
 
     /**
 	 * Construct a CnpOnline using the configuration specified in $HOME/.cnp_SDK_config.properties
@@ -91,16 +91,11 @@ public class CnpOnline {
 	}
 
 	public AuthorizationResponse authorize(Authorization auth, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(auth);
 
 		request.setTransaction(CnpContext.getObjectFactory().createAuthorization(auth));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (AuthorizationResponse)newresponse.getValue();
 	}
@@ -111,16 +106,11 @@ public class CnpOnline {
 	}
 
 	public AuthReversalResponse authReversal(AuthReversal reversal, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(reversal);
 
 		request.setTransaction(CnpContext.getObjectFactory().createAuthReversal(reversal));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (AuthReversalResponse)newresponse.getValue();
 	}
@@ -131,16 +121,11 @@ public class CnpOnline {
 	}
 
 	public CaptureResponse capture(Capture capture, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(capture);
 
 		request.setTransaction(CnpContext.getObjectFactory().createCapture(capture));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (CaptureResponse)newresponse.getValue();
 	}
@@ -151,16 +136,11 @@ public class CnpOnline {
 	}
 
 	public CaptureGivenAuthResponse captureGivenAuth(CaptureGivenAuth captureGivenAuth, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(captureGivenAuth);
 
 		request.setTransaction(CnpContext.getObjectFactory().createCaptureGivenAuth(captureGivenAuth));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (CaptureGivenAuthResponse)newresponse.getValue();
 	}
@@ -171,16 +151,11 @@ public class CnpOnline {
 	}
 
 	public CreditResponse credit(Credit credit, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(credit);
 
 		request.setTransaction(CnpContext.getObjectFactory().createCredit(credit));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (CreditResponse)newresponse.getValue();
 	}
@@ -191,16 +166,11 @@ public class CnpOnline {
 	}
 
 	public EcheckCreditResponse echeckCredit(EcheckCredit echeckcredit, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(echeckcredit);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckCredit(echeckcredit));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (EcheckCreditResponse)newresponse.getValue();
 	}
@@ -211,16 +181,11 @@ public class CnpOnline {
 	}
 
 	public EcheckRedepositResponse echeckRedeposit(EcheckRedeposit echeckRedeposit, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(echeckRedeposit);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckRedeposit(echeckRedeposit));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (EcheckRedepositResponse)newresponse.getValue();
 	}
@@ -231,16 +196,11 @@ public class CnpOnline {
 	}
 
 	public EcheckSalesResponse echeckSale(EcheckSale echeckSale, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(echeckSale);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckSale(echeckSale));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (EcheckSalesResponse)newresponse.getValue();
 	}
@@ -251,16 +211,11 @@ public class CnpOnline {
 	}
 
 	public EcheckVerificationResponse echeckVerification(EcheckVerification echeckVerification, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(echeckVerification);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckVerification(echeckVerification));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (EcheckVerificationResponse)newresponse.getValue();
 	}
@@ -271,16 +226,11 @@ public class CnpOnline {
 	}
 
 	public ForceCaptureResponse forceCapture(ForceCapture forceCapture, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(forceCapture);
 
 		request.setTransaction(CnpContext.getObjectFactory().createForceCapture(forceCapture));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (ForceCaptureResponse)newresponse.getValue();
 	}
@@ -291,16 +241,11 @@ public class CnpOnline {
 	}
 
 	public SaleResponse sale(Sale sale, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(sale);
 
 		request.setTransaction(CnpContext.getObjectFactory().createSale(sale));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (SaleResponse)newresponse.getValue();
 	}
@@ -311,16 +256,11 @@ public class CnpOnline {
 	}
 
 	public FraudCheckResponse fraudCheck(FraudCheck fraudCheck, CnpOnlineRequest overrides) throws CnpOnlineException {
-	      CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+	    CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 	    fillInReportGroup(fraudCheck);
 
 	    request.setTransaction(CnpContext.getObjectFactory().createFraudCheck(fraudCheck));
-	    if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+	    CnpOnlineResponse response = sendToCnp(request);
 	    JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 	    return (FraudCheckResponse)newresponse.getValue();
 	}
@@ -331,16 +271,11 @@ public class CnpOnline {
 	}
 
 	public RegisterTokenResponse registerToken(RegisterTokenRequestType tokenRequest, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(tokenRequest);
 
 		request.setTransaction(CnpContext.getObjectFactory().createRegisterTokenRequest(tokenRequest));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (RegisterTokenResponse)newresponse.getValue();
 	}
@@ -351,16 +286,11 @@ public class CnpOnline {
 	}
 
 	public VoidResponse dovoid(Void v, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(v);
 
 		request.setTransaction(CnpContext.getObjectFactory().createVoid(v));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (VoidResponse)newresponse.getValue();
 	}
@@ -371,16 +301,11 @@ public class CnpOnline {
 	}
 
 	public EcheckVoidResponse echeckVoid(EcheckVoid echeckVoid, CnpOnlineRequest overrides) throws CnpOnlineException {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(echeckVoid);
 
 		request.setTransaction(CnpContext.getObjectFactory().createEcheckVoid(echeckVoid));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (EcheckVoidResponse)newresponse.getValue();
 	}
@@ -391,16 +316,11 @@ public class CnpOnline {
 	}
 
 	public UpdateCardValidationNumOnTokenResponse updateCardValidationNumOnToken(UpdateCardValidationNumOnToken update, CnpOnlineRequest overrides) {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(update);
 
 		request.setTransaction(CnpContext.getObjectFactory().createUpdateCardValidationNumOnToken(update));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (UpdateCardValidationNumOnTokenResponse)newresponse.getValue();
 	}
@@ -411,15 +331,10 @@ public class CnpOnline {
     }
 
     public CancelSubscriptionResponse cancelSubscription(CancelSubscription cancellation, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createCancelSubscription(cancellation));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends RecurringTransactionResponseType> newresponse = response.getRecurringTransactionResponse();
         return (CancelSubscriptionResponse)newresponse.getValue();
     }
@@ -430,15 +345,10 @@ public class CnpOnline {
     }
 
     public UpdateSubscriptionResponse updateSubscription(UpdateSubscription update, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createUpdateSubscription(update));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends RecurringTransactionResponseType> newresponse = response.getRecurringTransactionResponse();
         return (UpdateSubscriptionResponse)newresponse.getValue();
     }
@@ -449,15 +359,10 @@ public class CnpOnline {
     }
 
     public CreatePlanResponse createPlan(CreatePlan create, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createCreatePlan(create));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends RecurringTransactionResponseType> newresponse = response.getRecurringTransactionResponse();
         return (CreatePlanResponse)newresponse.getValue();
     }
@@ -468,15 +373,10 @@ public class CnpOnline {
     }
 
     public UpdatePlanResponse updatePlan(UpdatePlan update, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 
         request.setRecurringTransaction(CnpContext.getObjectFactory().createUpdatePlan(update));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends RecurringTransactionResponseType> newresponse = response.getRecurringTransactionResponse();
         return (UpdatePlanResponse)newresponse.getValue();
     }
@@ -487,16 +387,11 @@ public class CnpOnline {
     }
 
     public ActivateResponse activate(Activate activate, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(activate);
 
         request.setTransaction(CnpContext.getObjectFactory().createActivate(activate));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (ActivateResponse)newresponse.getValue();
     }
@@ -507,16 +402,11 @@ public class CnpOnline {
     }
 
     public DeactivateResponse deactivate(Deactivate deactivate, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(deactivate);
 
         request.setTransaction(CnpContext.getObjectFactory().createDeactivate(deactivate));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (DeactivateResponse)newresponse.getValue();
     }
@@ -527,16 +417,11 @@ public class CnpOnline {
     }
 
     public LoadResponse load(Load load, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(load);
 
         request.setTransaction(CnpContext.getObjectFactory().createLoad(load));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (LoadResponse)newresponse.getValue();
     }
@@ -547,16 +432,11 @@ public class CnpOnline {
     }
 
     public UnloadResponse unload(Unload unload, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(unload);
 
         request.setTransaction(CnpContext.getObjectFactory().createUnload(unload));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (UnloadResponse)newresponse.getValue();
     }
@@ -567,16 +447,11 @@ public class CnpOnline {
     }
 
     public BalanceInquiryResponse balanceInquiry(BalanceInquiry balanceInquiry, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(balanceInquiry);
 
         request.setTransaction(CnpContext.getObjectFactory().createBalanceInquiry(balanceInquiry));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (BalanceInquiryResponse)newresponse.getValue();
     }
@@ -587,16 +462,11 @@ public class CnpOnline {
     }
 
     public ActivateReversalResponse activateReversal(ActivateReversal activateReversal, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(activateReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createActivateReversal(activateReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (ActivateReversalResponse)newresponse.getValue();
     }
@@ -607,16 +477,11 @@ public class CnpOnline {
     }
 
     public DeactivateReversalResponse deactivateReversal(DeactivateReversal deactivateReversal, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(deactivateReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createDeactivateReversal(deactivateReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (DeactivateReversalResponse)newresponse.getValue();
     }
@@ -627,16 +492,11 @@ public class CnpOnline {
     }
 
     public LoadReversalResponse loadReversal(LoadReversal loadReversal, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(loadReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createLoadReversal(loadReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (LoadReversalResponse)newresponse.getValue();
     }
@@ -647,16 +507,11 @@ public class CnpOnline {
     }
 
     public UnloadReversalResponse unloadReversal(UnloadReversal unloadReversal, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(unloadReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createUnloadReversal(unloadReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (UnloadReversalResponse)newresponse.getValue();
     }
@@ -667,16 +522,11 @@ public class CnpOnline {
     }
 
     public RefundReversalResponse refundReversal(RefundReversal refundReversal, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(refundReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createRefundReversal(refundReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (RefundReversalResponse)newresponse.getValue();
     }
@@ -687,16 +537,11 @@ public class CnpOnline {
     }
 
     public DepositReversalResponse depositReversal(DepositReversal depositReversal, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(depositReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createDepositReversal(depositReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (DepositReversalResponse)newresponse.getValue();
     }
@@ -707,16 +552,11 @@ public class CnpOnline {
     }
 
     public DepositTransactionReversalResponse depositTransactionReversal(DepositTransactionReversal depositTransactionReversal, CnpOnlineRequest overrides) {
-	      CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+	    CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 	    fillInReportGroup(depositTransactionReversal);
 
 	    request.setTransaction(CnpContext.getObjectFactory().createDepositTransactionReversal(depositTransactionReversal));
-	    if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+	    CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (DepositTransactionReversalResponse) newresponse.getValue();
     }
@@ -727,16 +567,11 @@ public class CnpOnline {
     }
 
     public RefundTransactionReversalResponse refundTransactionReversal(RefundTransactionReversal transactionReversal, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(transactionReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createRefundTransactionReversal(transactionReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (RefundTransactionReversalResponse) newresponse.getValue();
     }
@@ -747,16 +582,12 @@ public class CnpOnline {
     }
 
     public TransactionTypeWithReportGroup queryTransaction(QueryTransaction queryTransaction, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+       CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(queryTransaction);
 
         request.setTransaction(CnpContext.getObjectFactory().createQueryTransaction(queryTransaction));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendQueryTxnToCnpWithEncryption(request,true);
-        }   else {
-            response = sendQueryTxnToCnp(request, true);
-        }
+        CnpOnlineResponse response = sendQueryTxnToCnp(request, true);
+
         JAXBElement<? extends TransactionTypeWithReportGroup> txnTypeWithReportGroup = response.getTransactionResponse();
         return txnTypeWithReportGroup.getValue();
     }
@@ -767,16 +598,11 @@ public class CnpOnline {
     }
 
     public GiftCardCaptureResponse giftCardCapture(GiftCardCapture giftCardCapture, CnpOnlineRequest overrides) {
-    	  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+    	CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardCapture);
 
         request.setTransaction(CnpContext.getObjectFactory().createGiftCardCapture(giftCardCapture));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (GiftCardCaptureResponse)newresponse.getValue();
     }
@@ -787,16 +613,11 @@ public class CnpOnline {
     }
 
     public GiftCardAuthReversalResponse giftCardAuthReversal(GiftCardAuthReversal giftCardAuthReversal, CnpOnlineRequest overrides) {
-    	  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+    	CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardAuthReversal);
 
         request.setTransaction(CnpContext.getObjectFactory().createGiftCardAuthReversal(giftCardAuthReversal));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (GiftCardAuthReversalResponse)newresponse.getValue();
     }
@@ -807,16 +628,11 @@ public class CnpOnline {
     }
 
     public GiftCardCreditResponse giftCardCredit(GiftCardCredit giftCardCredit, CnpOnlineRequest overrides) {
-    	  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+    	CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createGiftCardCredit(giftCardCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (GiftCardCreditResponse)newresponse.getValue();
     }
@@ -827,16 +643,11 @@ public class CnpOnline {
     }
 
     public PayFacCreditResponse payFacCredit(PayFacCredit payFacCredit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payFacCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayFacCredit(payFacCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PayFacCreditResponse)newresponse.getValue();
     }
@@ -847,16 +658,11 @@ public class CnpOnline {
     }
 
     public PayFacDebitResponse payFacDebit(PayFacDebit payFacDebit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payFacDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayFacDebit(payFacDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PayFacDebitResponse)newresponse.getValue();
     }
@@ -867,16 +673,11 @@ public class CnpOnline {
     }
 
     public SubmerchantCreditResponse submerchantCredit(SubmerchantCredit submerchantCredit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(submerchantCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createSubmerchantCredit(submerchantCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (SubmerchantCreditResponse)newresponse.getValue();
     }
@@ -887,16 +688,11 @@ public class CnpOnline {
     }
 
     public SubmerchantDebitResponse submerchantDebit(SubmerchantDebit submerchantDebit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(submerchantDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createSubmerchantDebit(submerchantDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (SubmerchantDebitResponse)newresponse.getValue();
     }
@@ -907,16 +703,11 @@ public class CnpOnline {
     }
 
     public ReserveCreditResponse reserveCredit(ReserveCredit reserveCredit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(reserveCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createReserveCredit(reserveCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (ReserveCreditResponse)newresponse.getValue();
     }
@@ -927,16 +718,11 @@ public class CnpOnline {
     }
 
     public ReserveDebitResponse reserveDebit(ReserveDebit reserveDebit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(reserveDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createReserveDebit(reserveDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (ReserveDebitResponse)newresponse.getValue();
     }
@@ -947,16 +733,11 @@ public class CnpOnline {
     }
 
     public FundingInstructionVoidResponse fundingInstructionVoid(FundingInstructionVoid fundingInstructionVoid, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(fundingInstructionVoid);
 
         request.setTransaction(CnpContext.getObjectFactory().createFundingInstructionVoid(fundingInstructionVoid));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (FundingInstructionVoidResponse)newresponse.getValue();
     }
@@ -967,16 +748,11 @@ public class CnpOnline {
     }
 
     public VendorCreditResponse vendorCredit(VendorCredit vendorCredit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(vendorCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createVendorCredit(vendorCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (VendorCreditResponse)newresponse.getValue();
     }
@@ -992,16 +768,11 @@ public class CnpOnline {
     }
 
     public VendorDebitResponse vendorDebit(VendorDebit vendorDebit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(vendorDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createVendorDebit(vendorDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (VendorDebitResponse)newresponse.getValue();
     }
@@ -1012,16 +783,11 @@ public class CnpOnline {
     }
 
     public PhysicalCheckCreditResponse physicalCheckCredit(PhysicalCheckCredit physicalCheckCredit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(physicalCheckCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPhysicalCheckCredit(physicalCheckCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PhysicalCheckCreditResponse)newresponse.getValue();
     }
@@ -1032,16 +798,11 @@ public class CnpOnline {
     }
 
     public PhysicalCheckDebitResponse physicalCheckDebit(PhysicalCheckDebit physicalCheckDebit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(physicalCheckDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPhysicalCheckDebit(physicalCheckDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PhysicalCheckDebitResponse)newresponse.getValue();
     }
@@ -1052,16 +813,11 @@ public class CnpOnline {
 	}
 
 	public FastAccessFundingResponse fastAccessFunding(FastAccessFunding fastAccessFunding, CnpOnlineRequest overrides) {
-		  CnpOnlineResponse response;
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+		CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 		fillInReportGroup(fastAccessFunding);
 
 		request.setTransaction(CnpContext.getObjectFactory().createFastAccessFunding(fastAccessFunding));
-		if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+		CnpOnlineResponse response = sendToCnp(request);
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (FastAccessFundingResponse)newresponse.getValue();
 	}
@@ -1073,17 +829,11 @@ public class CnpOnline {
 
     public TranslateToLowValueTokenResponse TranslateToLowValueTokenRequest(TranslateToLowValueTokenRequestType translateToLowValueTokenRequest,
                                                                             CnpOnlineRequest overridingRequestHeader){
-
-        CnpOnlineResponse response;
 	    CnpOnlineRequest request = fillInMissingFieldsFromConfig(overridingRequestHeader);
 	    fillInReportGroup(translateToLowValueTokenRequest);
 
         request.setTransaction(CnpContext.getObjectFactory().createTranslateToLowValueTokenRequest(translateToLowValueTokenRequest));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (TranslateToLowValueTokenResponse)newresponse.getValue();
     }
@@ -1094,16 +844,11 @@ public class CnpOnline {
     }
 
     public CustomerCreditResponse customerCredit(CustomerCredit customerCredit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(customerCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createCustomerCredit(customerCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (CustomerCreditResponse)newresponse.getValue();
     }
@@ -1114,16 +859,11 @@ public class CnpOnline {
     }
 
     public CustomerDebitResponse customerDebit(CustomerDebit customerDebit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(customerDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createCustomerDebit(customerDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (CustomerDebitResponse)newresponse.getValue();
     }
@@ -1134,16 +874,11 @@ public class CnpOnline {
     }
 
     public PayoutOrgCreditResponse payoutOrgCredit(PayoutOrgCredit payoutOrgCredit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payoutOrgCredit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayoutOrgCredit(payoutOrgCredit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PayoutOrgCreditResponse)newresponse.getValue();
     }
@@ -1154,16 +889,11 @@ public class CnpOnline {
     }
 
     public PayoutOrgDebitResponse payoutOrgDebit(PayoutOrgDebit payoutOrgDebit, CnpOnlineRequest overrides) {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payoutOrgDebit);
 
         request.setTransaction(CnpContext.getObjectFactory().createPayoutOrgDebit(payoutOrgDebit));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PayoutOrgDebitResponse)newresponse.getValue();
     }
@@ -1174,16 +904,11 @@ public class CnpOnline {
     }
 
     public FinicityUrlResponse finicityUrl(FinicityUrlRequest finicityUrl, CnpOnlineRequest overrides) throws CnpOnlineException {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(finicityUrl);
 
         request.setTransaction(CnpContext.getObjectFactory().createFinicityUrlRequest(finicityUrl));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (FinicityUrlResponse)newresponse.getValue();
     }
@@ -1194,15 +919,10 @@ public class CnpOnline {
     }
 
     public FinicityAccountResponse finicityAccount(FinicityAccountRequest finicityAccount, CnpOnlineRequest overrides) throws CnpOnlineException {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(finicityAccount);
         request.setTransaction(CnpContext.getObjectFactory().createFinicityAccountRequest(finicityAccount));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (FinicityAccountResponse) newresponse.getValue();
     }
@@ -1213,16 +933,11 @@ public class CnpOnline {
     }
 
     public BNPLAuthResponse bnplAuth(BNPLAuthorizationRequest bnplAuth, CnpOnlineRequest overrides) throws CnpOnlineException {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(bnplAuth);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLAuthorizationRequest(bnplAuth));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (BNPLAuthResponse) newresponse.getValue();
     }
@@ -1232,16 +947,11 @@ public class CnpOnline {
     }
 
     public BNPLCaptureResponse bnplCapture(BNPLCaptureRequest bnplCapture, CnpOnlineRequest overrides) throws CnpOnlineException {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(bnplCapture);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLCaptureRequest(bnplCapture));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (BNPLCaptureResponse) newresponse.getValue();
     }
@@ -1252,16 +962,11 @@ public class CnpOnline {
     }
 
     public BNPLRefundResponse bnplRefund(BNPLRefundRequest bnplRefund, CnpOnlineRequest overrides) throws CnpOnlineException {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(bnplRefund);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLRefundRequest(bnplRefund));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (BNPLRefundResponse)newresponse.getValue();
     }
@@ -1272,16 +977,11 @@ public class CnpOnline {
     }
 
     public BNPLCancelResponse bnplCancle(BNPLCancelRequest bnplCancle, CnpOnlineRequest overrides) throws CnpOnlineException {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(bnplCancle);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLCancelRequest(bnplCancle));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (BNPLCancelResponse) newresponse.getValue();
     }
@@ -1292,16 +992,11 @@ public class CnpOnline {
     }
 
     public BNPLInquiryResponse bnplInquiry(BNPLInquiryRequest bnplInquiry, CnpOnlineRequest overrides) throws CnpOnlineException {
-          CnpOnlineResponse response;
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(bnplInquiry);
 
         request.setTransaction(CnpContext.getObjectFactory().createBNPLInquiryRequest(bnplInquiry));
-        if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))){
-            response = sendToCnpForEncryption(request);
-        }   else {
-            response = sendToCnp(request);
-        }
+        CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (BNPLInquiryResponse)newresponse.getValue();
     }
@@ -1312,8 +1007,8 @@ public class CnpOnline {
     }
 
     public EncryptionKeyResponse encryptionKeyRequest(EncryptionKeyRequestEnum encryptionKeyRequest, CnpOnlineRequest overrides) throws CnpOnlineException {
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
-        request.setEncryptionKeyRequest(CnpContext.getObjectFactory().createEncryptionKeyRequest(encryptionKeyRequest).getValue()); //convert
+       CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+        request.setEncryptionKeyRequest(CnpContext.getObjectFactory().createEncryptionKeyRequest(encryptionKeyRequest).getValue());
         CnpOnlineResponse response = sendToCnp(request);
         EncryptionKeyResponse encryptionKeyResponse = response.getEncryptionKeyResponse();
         QName qName = new QName("http://www.vantivcnp.com/schema", "encryptionKeyResponse");
@@ -1383,12 +1078,17 @@ public class CnpOnline {
 		try {
 			StringWriter sw = new StringWriter();
 			CnpContext.getJAXBContext().createMarshaller().marshal(request, sw);
-			String xmlRequest = sw.toString();
+			 xmlRequest = sw.toString();
 
 			if(this.removeStubs){
 			    xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
 			}
-		//	System.out.println("config-------------"+config+"\n\n\n");
+            //	System.out.println("config-------------"+config+"\n\n\n");
+
+            if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
+                xmlRequest = replaceWithEncryptedPayload(xmlRequest);
+            }           
+            
 			String xmlResponse = communication.requestToServer(xmlRequest, config);
 			/**
 			 * This was added to accommodate an issue with OpenAccess and possibly VAP where the XML namespace returned
@@ -1434,6 +1134,11 @@ public class CnpOnline {
                 xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
             }
             //	System.out.println("config-------------"+config+"\n\n\n");
+
+            if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
+                xmlRequest = replaceWithEncryptedPayload(xmlRequest);
+            }
+
             if (retrySite)
                 config.setProperty("url", config.getProperty("multiSiteUrl1", config.getProperty("url")));
             else
@@ -1500,52 +1205,7 @@ public class CnpOnline {
 
     }
 
-    private CnpOnlineResponse sendToCnpForEncryption(CnpOnlineRequest request) throws CnpOnlineException {
-        try {
-            StringWriter sw = new StringWriter();
-            CnpContext.getJAXBContext().createMarshaller().marshal(request, sw);
-            String xmlRequest = sw.toString();
-
-            if (this.removeStubs) {
-                xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
-            }
-
-            //Get the specific txn tag to be sent for encryption logic
-            replaceWithEncryptedPayload(xmlRequest);
-
-            String xmlResponse = communication.requestToServer(newXmlRequest, config);
-            /**
-             * This was added to accommodate an issue with OpenAccess and possibly VAP where the XML namespace returned
-             * contains the extra "/online".
-             * This issue will be fixed for OpenAccess in Jan 2018
-             */
-            if (xmlResponse.contains("http://www.vantivcnp.com/schema/online")) {
-                xmlResponse = xmlResponse.replace("http://www.vantivcnp.com/schema/online", "http://www.vantivcnp.com/schema");
-            }
-
-            CnpOnlineResponse response = (CnpOnlineResponse) CnpContext.getJAXBContext().createUnmarshaller().unmarshal(new StringReader(xmlResponse));
-            // non-zero responses indicate a problem
-            if (!"0".equals(response.getResponse())) {
-                if ("2".equals(response.getResponse()) || "3".equals(response.getResponse())) {
-                    throw new CnpInvalidCredentialException(response.getMessage());
-                } else if ("4".equals(response.getResponse())) {
-                    throw new CnpConnectionLimitExceededException(response.getMessage());
-                } else if ("5".equals(response.getResponse())) {
-                    throw new CnpObjectionableContentException(response.getMessage());
-                } else {
-                    throw new CnpOnlineException(response.getMessage());
-                }
-            }
-            return response;
-
-        } catch(
-                JAXBException ume)
-        {
-            throw new CnpOnlineException("Error validating xml data against the schema", ume);
-        } finally {
-        }
-    }
-    private void replaceWithEncryptedPayload(String xmlRequest) {
+    private String replaceWithEncryptedPayload(String xmlRequest) {
         try {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlRequest)));
 
@@ -1569,9 +1229,10 @@ public class CnpOnline {
             //to form encryptedPayload tag
             String payloadTag = String.format("<payload>%s</payload>", payload);
 
-            if(config.getProperty("oltpEncryptionKeySequence")!= null) {
+            if (config.getProperty("oltpEncryptionKeySequence") != null) {
                 encryptionKeySequence = config.getProperty("oltpEncryptionKeySequence");
-            }else{
+            }
+            else {
                 throw new RuntimeException("Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ");
             }
 
@@ -1593,110 +1254,28 @@ public class CnpOnline {
             transformer1.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             StringWriter writer1 = new StringWriter();
             transformer.transform(new DOMSource(doc), new StreamResult(writer1));
-            newXmlRequest = writer1.getBuffer().toString().trim();
-        } catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
+            xmlRequest = writer1.getBuffer().toString().trim();
+        }
+        catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
             throw new RuntimeException(e);
         }
+        return xmlRequest;
     }
 
-    private String processTxnToBeEncrypted (String request )  {
+    private String processTxnToBeEncrypted(String request) {
         if (config.getProperty("oltpEncryptionKeyPath") == null) {
             throw new RuntimeException("Problem in reading the Encryption Key path ...Provide the Encryption key path ");
         }
-        else{
+        else {
             try {
                 encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
             }
-            catch (IOException  | PGPException e ) {
-                throw new RuntimeException(e);
-                //throw new RuntimeException("\"There was an exception while reading the key from Specified path "+
-               //         "\n If the Path is correct check for keys correctness " ,e);
+            catch (IOException | PGPException e) {
+                throw new RuntimeException("\"There was an exception while reading the key from Specified path" +
+                        "\n If the Path is correct check for keys correctness ", e);
             }
         }
-            return encryptedTxn;
-        }
-
-    private CnpOnlineResponse sendQueryTxnToCnpWithEncryption (CnpOnlineRequest request, Boolean retrySite) throws
-            CnpOnlineException {
-        String xmlResponse;
-        CnpOnlineResponse response = null;
-        QueryTransactionResponse queryTxnResponse = null;
-        String siteAddress;
-        String altAddress;
-        try {
-            StringWriter sw = new StringWriter();
-            CnpContext.getJAXBContext().createMarshaller().marshal(request, sw);
-            String xmlRequest = sw.toString();
-
-            if (this.removeStubs) {
-                xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
-            }
-
-            replaceWithEncryptedPayload(xmlRequest);
-
-            if (retrySite)
-                config.setProperty("url", config.getProperty("multiSiteUrl1", config.getProperty("url")));
-            else
-                config.setProperty("url", config.getProperty("multiSiteUrl2", config.getProperty("url")));
-
-            CommManager.reset();
-            xmlResponse = communication.requestToServer(newXmlRequest, config);
-            try {
-                if (xmlResponse.contains("queryTransactionResponse")) {
-                    xmlResponse = getSchema(xmlResponse);
-                    response = (CnpOnlineResponse) CnpContext.getJAXBContext().createUnmarshaller().unmarshal(new StringReader(xmlResponse));
-                    queryTxnResponse = (QueryTransactionResponse) response.getTransactionResponse().getValue();
-                    if (queryTxnResponse != null && "151".equals(queryTxnResponse.getResponse())) {
-                        if (!retrySite) {
-                            siteAddress = config.getProperty("multiSiteUrl1") != null ? ". Site unavailable : " + config.getProperty("multiSiteUrl1") : "";
-                            altAddress = config.getProperty("multiSiteUrl2") != null ? " in " + config.getProperty("multiSiteUrl2") : "";
-                            queryTxnResponse.setMessage("Original transaction not found" + altAddress + "" + siteAddress);
-                            response.setResponse(queryTxnResponse.toString());
-                            return response;
-                        } else {
-                            config.setProperty("url", config.getProperty("multiSiteUrl2", config.getProperty("url")));
-                            CommManager.reset();
-                            xmlResponse = communication.requestToServer(xmlRequest, config);
-                        }
-                    }
-                }
-            } catch (CnpOnlineException ex) {
-                siteAddress = config.getProperty("multiSiteUrl2") != null ? ". Site unavailable : " + config.getProperty("multiSiteUrl2") : "";
-                altAddress = config.getProperty("multiSiteUrl1") != null ? " in " + config.getProperty("multiSiteUrl1") : "";
-                queryTxnResponse.setMessage("Original transaction not found" + altAddress + "" + siteAddress);
-                response.setResponse(queryTxnResponse.toString());
-                return response;
-            }
-            /**
-             * This was added to accommodate an issue with OpenAccess and possibly VAP where the XML namespace returned
-             * contains the extra "/online".
-             * This issue will be fixed for OpenAccess in Jan 2018
-             */
-            xmlResponse = getSchema(xmlResponse);
-            response = (CnpOnlineResponse) CnpContext.getJAXBContext().createUnmarshaller().unmarshal(new StringReader(xmlResponse));
-            // non-zero responses indicate a problem
-            if (!"0".equals(response.getResponse())) {
-                if ("2".equals(response.getResponse()) || "3".equals(response.getResponse())) {
-                    throw new CnpInvalidCredentialException(response.getMessage());
-                } else if ("4".equals(response.getResponse())) {
-                    throw new CnpConnectionLimitExceededException(response.getMessage());
-                } else if ("5".equals(response.getResponse())) {
-                    throw new CnpObjectionableContentException(response.getMessage());
-                } else {
-                    throw new CnpOnlineException(response.getMessage());
-                }
-            }
-            return response;
-        } catch (JAXBException ume) {
-            throw new CnpOnlineException("Error validating xml data against the schema", ume);
-        } catch (CnpOnlineException ex) {
-            if (retrySite) {
-                response = sendQueryTxnToCnp(request, false);
-                return response;
-            }
-            throw new CnpOnlineException("Original transaction not found - Site/s unavailable");
-        } finally {
-        }
+        return encryptedTxn;
     }
 
     private String getSchema(String xmlResponse) {
@@ -1723,5 +1302,4 @@ public class CnpOnline {
             txn.setReportGroup(config.getProperty("reportGroup"));
         }
     }
-
 }

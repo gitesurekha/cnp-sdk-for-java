@@ -4,7 +4,6 @@ import io.github.vantiv.sdk.generate.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -37,13 +36,5 @@ public class TestTxnForEncryption {
         AuthorizationResponse response = cnp.authorize(authorization);
         assertEquals("abc",response.getReportGroup());
         assertEquals("sandbox", response.getLocation());
-    }
-
-    @Test
-    public void testEncryptionKeyRequest() throws Exception {
-        EncryptionKeyRequest request = new EncryptionKeyRequest();
-        request.setEncryptionKeyRequest(EncryptionKeyRequestEnum.CURRENT);
-        EncryptionKeyResponse response = cnp.encryptionKeyRequest(request.getEncryptionKeyRequest());
-        assertNotNull(response);
     }
 }
