@@ -1261,7 +1261,7 @@ public class CnpOnline {
             transformer.transform(new DOMSource(doc), new StreamResult(writer1));
             xmlRequest = writer1.getBuffer().toString().trim();
         }
-        catch (TransformerException | ParserConfigurationException | SAXException | IOException e) {
+        catch (ParserConfigurationException | IOException | SAXException | TransformerException  e) {
             throw new CnpOnlineException("\"Error processing XML request.Please reach out to SDK Support team.\"");
         }
         return xmlRequest;
