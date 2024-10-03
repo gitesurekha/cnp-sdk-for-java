@@ -833,7 +833,7 @@ public class TestSale {
 		assertEquals(response.getMessage(), "Approved", response.getMessage());
 		assertEquals("sandbox", response.getLocation());
 	}
-
+//test for new elements:typeOfDigitalCurrency,conversionAffiliateId  v12.40
 	@Test
 	public void sTestSimpleSalewith12_37() throws Exception{
 		Sale sale = new Sale();
@@ -847,6 +847,8 @@ public class TestSale {
 		card.setNumber("4100000000000000");
 		card.setExpDate("1210");
 		sale.setCard(card);
+		sale.setTypeOfDigitalCurrency("2");
+		sale.setConversionAffiliateId("ABCD");
 		sale.setId("id");
 		AccountFundingTransactionData accountFundingTransactionData= new AccountFundingTransactionData();
 		accountFundingTransactionData.setReceiverAccountNumber("12345");

@@ -178,11 +178,14 @@ public class TestQueryTransaction {
         cnpProperty.setProperty("password", "V2b9F4k7");
         cnpProperty.setProperty("merchantId", "1288791");
         cnpProperty.setProperty("reportGroup", "Default Report Group");
-         cnpProperty.setProperty("printxml", "true");
+        cnpProperty.setProperty("printxml", "true");
         cnpProperty.setProperty("proxyHost", "usproxy.dlb.corp.vantiv.com");
         cnpProperty.setProperty("proxyPort", "8080");
         cnpProperty.setProperty("multiSiteUrl1",url1);
         cnpProperty.setProperty("multiSiteUrl2",url2);
+        cnpProperty.setProperty("oltpEncryptionPayload","true");
+        cnpProperty.setProperty("oltpEncryptionKeySequence","10000");
+        cnpProperty.setProperty("oltpEncryptionKeyPath","/home/buildvwr/pgpKeyOltp/cnpOltpEncryptionKey.asc");
         return cnpProperty;
-    }
+  }
 }

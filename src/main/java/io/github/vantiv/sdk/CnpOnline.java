@@ -5,21 +5,45 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import io.github.vantiv.sdk.generate.*;
 import io.github.vantiv.sdk.generate.Void;
+
+import org.bouncycastle.openpgp.PGPException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class CnpOnline {
 
 	private Properties config;
 	private Communication communication;
 	private Boolean removeStubs = false;
+    private String xmlRequest;
+    private String encryptedTxn;
+    private String output;
+    private String payload;
+    private String encryptionKeySequence;
 
-	/**
+    /**
 	 * Construct a CnpOnline using the configuration specified in $HOME/.cnp_SDK_config.properties
 	 */
 	public CnpOnline() {
@@ -228,16 +252,16 @@ public class CnpOnline {
 		JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
 		return (SaleResponse)newresponse.getValue();
 	}
-	
+
 	public FraudCheckResponse fraudCheck(FraudCheck fraudCheck) throws CnpOnlineException {
 	    CnpOnlineRequest request = createCnpOnlineRequest();
 	    return fraudCheck(fraudCheck, request);
 	}
-	
+
 	public FraudCheckResponse fraudCheck(FraudCheck fraudCheck, CnpOnlineRequest overrides) throws CnpOnlineException {
 	    CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
 	    fillInReportGroup(fraudCheck);
-	    
+
 	    request.setTransaction(CnpContext.getObjectFactory().createFraudCheck(fraudCheck));
 	    CnpOnlineResponse response = sendToCnp(request);
 	    JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
@@ -561,20 +585,20 @@ public class CnpOnline {
     }
 
     public TransactionTypeWithReportGroup queryTransaction(QueryTransaction queryTransaction, CnpOnlineRequest overrides) {
-        CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+       CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(queryTransaction);
 
         request.setTransaction(CnpContext.getObjectFactory().createQueryTransaction(queryTransaction));
-        CnpOnlineResponse response = sendQueryTxnToCnp(request,true);
+        CnpOnlineResponse response = sendQueryTxnToCnp(request, true);
         JAXBElement<? extends TransactionTypeWithReportGroup> txnTypeWithReportGroup = response.getTransactionResponse();
         return txnTypeWithReportGroup.getValue();
     }
-    
+
     public GiftCardCaptureResponse giftCardCapture(GiftCardCapture giftCardCapture) {
     	CnpOnlineRequest request = createCnpOnlineRequest();
         return giftCardCapture(giftCardCapture, request);
     }
-    
+
     public GiftCardCaptureResponse giftCardCapture(GiftCardCapture giftCardCapture, CnpOnlineRequest overrides) {
     	CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardCapture);
@@ -584,12 +608,12 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (GiftCardCaptureResponse)newresponse.getValue();
     }
-    
+
     public GiftCardAuthReversalResponse giftCardAuthReversal(GiftCardAuthReversal giftCardAuthReversal) {
     	CnpOnlineRequest request = createCnpOnlineRequest();
         return giftCardAuthReversal(giftCardAuthReversal, request);
     }
-    
+
     public GiftCardAuthReversalResponse giftCardAuthReversal(GiftCardAuthReversal giftCardAuthReversal, CnpOnlineRequest overrides) {
     	CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardAuthReversal);
@@ -599,12 +623,12 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (GiftCardAuthReversalResponse)newresponse.getValue();
     }
-    
+
     public GiftCardCreditResponse giftCardCredit(GiftCardCredit giftCardCredit) {
     	CnpOnlineRequest request = createCnpOnlineRequest();
         return giftCardCredit(giftCardCredit, request);
     }
-    
+
     public GiftCardCreditResponse giftCardCredit(GiftCardCredit giftCardCredit, CnpOnlineRequest overrides) {
     	CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
     	fillInReportGroup(giftCardCredit);
@@ -619,7 +643,7 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return payFacCredit(payFacCredit, request);
     }
-    
+
     public PayFacCreditResponse payFacCredit(PayFacCredit payFacCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payFacCredit);
@@ -634,7 +658,7 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return payFacDebit(payFacDebit, request);
     }
-    
+
     public PayFacDebitResponse payFacDebit(PayFacDebit payFacDebit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(payFacDebit);
@@ -649,7 +673,7 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return submerchantCredit(submerchantCredit, request);
     }
-    
+
     public SubmerchantCreditResponse submerchantCredit(SubmerchantCredit submerchantCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(submerchantCredit);
@@ -664,7 +688,7 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return submerchantDebit(submerchantDebit, request);
     }
-    
+
     public SubmerchantDebitResponse submerchantDebit(SubmerchantDebit submerchantDebit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(submerchantDebit);
@@ -674,12 +698,12 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (SubmerchantDebitResponse)newresponse.getValue();
     }
-    
+
     public ReserveCreditResponse submerchantCredit(ReserveCredit reserveCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return reserveCredit(reserveCredit, request);
     }
-    
+
     public ReserveCreditResponse reserveCredit(ReserveCredit reserveCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(reserveCredit);
@@ -694,7 +718,7 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return reserveDebit(reserveDebit, request);
     }
-    
+
     public ReserveDebitResponse reserveDebit(ReserveDebit reserveDebit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(reserveDebit);
@@ -709,7 +733,7 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return fundingInstructionVoid(fundingInstructionVoid, request);
     }
-    
+
     public FundingInstructionVoidResponse fundingInstructionVoid(FundingInstructionVoid fundingInstructionVoid, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(fundingInstructionVoid);
@@ -719,12 +743,12 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (FundingInstructionVoidResponse)newresponse.getValue();
     }
-    
+
     public VendorCreditResponse vendorCredit(VendorCredit vendorCredit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return vendorCredit(vendorCredit, request);
     }
-    
+
     public VendorCreditResponse vendorCredit(VendorCredit vendorCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(vendorCredit);
@@ -759,22 +783,22 @@ public class CnpOnline {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return physicalCheckCredit(physicalCheckCredit, request);
     }
-    
+
     public PhysicalCheckCreditResponse physicalCheckCredit(PhysicalCheckCredit physicalCheckCredit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(physicalCheckCredit);
-        
+
         request.setTransaction(CnpContext.getObjectFactory().createPhysicalCheckCredit(physicalCheckCredit));
         CnpOnlineResponse response = sendToCnp(request);
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (PhysicalCheckCreditResponse)newresponse.getValue();
     }
-    
+
     public PhysicalCheckDebitResponse physicalCheckDebit(PhysicalCheckDebit physicalCheckDebit) {
         CnpOnlineRequest request = createCnpOnlineRequest();
         return physicalCheckDebit(physicalCheckDebit, request);
     }
-    
+
     public PhysicalCheckDebitResponse physicalCheckDebit(PhysicalCheckDebit physicalCheckDebit, CnpOnlineRequest overrides) {
         CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
         fillInReportGroup(physicalCheckDebit);
@@ -978,6 +1002,22 @@ public class CnpOnline {
         JAXBElement<? extends TransactionTypeWithReportGroup> newresponse = response.getTransactionResponse();
         return (BNPLInquiryResponse)newresponse.getValue();
     }
+
+    public EncryptionKeyResponse encryptionKeyRequest(EncryptionKeyRequestEnum encryptionKeyRequest) {
+        CnpOnlineRequest request = createCnpOnlineRequest();
+        return encryptionKeyRequest(encryptionKeyRequest, request);
+    }
+
+    public EncryptionKeyResponse encryptionKeyRequest(EncryptionKeyRequestEnum encryptionKeyRequest, CnpOnlineRequest overrides) throws CnpOnlineException {
+       CnpOnlineRequest request = fillInMissingFieldsFromConfig(overrides);
+        request.setEncryptionKeyRequest(CnpContext.getObjectFactory().createEncryptionKeyRequest(encryptionKeyRequest).getValue());
+        CnpOnlineResponse response = sendToCnp(request);
+        EncryptionKeyResponse encryptionKeyResponse = response.getEncryptionKeyResponse();
+        QName qName = new QName("http://www.vantivcnp.com/schema", "encryptionKeyResponse");
+        JAXBElement<EncryptionKeyResponse> jaxbElement = new JAXBElement<>(qName, EncryptionKeyResponse.class, encryptionKeyResponse);
+        return jaxbElement.getValue();
+    }
+
 	private CnpOnlineRequest createCnpOnlineRequest() {
 		CnpOnlineRequest request = new CnpOnlineRequest();
 		request.setMerchantId(config.getProperty("merchantId"));
@@ -1040,12 +1080,17 @@ public class CnpOnline {
 		try {
 			StringWriter sw = new StringWriter();
 			CnpContext.getJAXBContext().createMarshaller().marshal(request, sw);
-			String xmlRequest = sw.toString();
+			 xmlRequest = sw.toString();
 
 			if(this.removeStubs){
 			    xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
 			}
-		//	System.out.println("config-------------"+config+"\n\n\n");
+            //	System.out.println("config-------------"+config+"\n\n\n");
+
+            if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
+                xmlRequest = replaceWithEncryptedPayload(xmlRequest);
+            }           
+            
 			String xmlResponse = communication.requestToServer(xmlRequest, config);
 			/**
 			 * This was added to accommodate an issue with OpenAccess and possibly VAP where the XML namespace returned
@@ -1091,6 +1136,11 @@ public class CnpOnline {
                 xmlRequest = xmlRequest.replaceAll("<[A-Za-z]+\\s*/>", "");
             }
             //	System.out.println("config-------------"+config+"\n\n\n");
+
+            if ("true".equalsIgnoreCase(config.getProperty("oltpEncryptionPayload"))) {
+                xmlRequest = replaceWithEncryptedPayload(xmlRequest);
+            }
+
             if (retrySite)
                 config.setProperty("url", config.getProperty("multiSiteUrl1", config.getProperty("url")));
             else
@@ -1157,6 +1207,88 @@ public class CnpOnline {
 
     }
 
+    private String replaceWithEncryptedPayload(String xmlRequest) {
+        try {
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xmlRequest)));
+
+            Element root = doc.getDocumentElement();
+            Node secondElement = root.getChildNodes().item(1);
+
+            if (secondElement.getNodeName() == "encryptionKeyRequest") {
+                return xmlRequest;
+            }
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(secondElement), new StreamResult(writer));
+            output = writer.getBuffer().toString().trim();
+            //removing the txn tag as encryptedPayload tag will get appended
+            if (secondElement != null) {
+                root.removeChild(secondElement);
+            }
+
+            payload = processTxnToBeEncrypted(output);
+            //to form encryptedPayload tag
+            String payloadTag = String.format("<payload>%s</payload>", payload);
+
+            if (config.getProperty("oltpEncryptionKeySequence") != null) {
+                encryptionKeySequence = config.getProperty("oltpEncryptionKeySequence");
+            }
+            else {
+                throw new CnpOnlineException("Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ");
+            }
+
+            String encryptionKeySequenceTag = String.format("<encryptionKeySequence>%s</encryptionKeySequence>", encryptionKeySequence);
+
+            String encryptedPayload = String.format(
+                    "<encryptedPayload>\n%s\n%s\n</encryptedPayload>",
+                    encryptionKeySequenceTag,
+                    payloadTag
+            );
+            //for replacing specific txn tag by encryptedPayload, it will be append to the root element
+            Document encryptedPayloadDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(encryptedPayload)));
+            Node newEncryptedPayloadNode = doc.importNode(encryptedPayloadDoc.getDocumentElement(), true);
+
+            root.appendChild(newEncryptedPayloadNode);
+
+            Transformer transformer1 = TransformerFactory.newInstance().newTransformer();
+            transformer1.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer1.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer1 = new StringWriter();
+            transformer.transform(new DOMSource(doc), new StreamResult(writer1));
+            xmlRequest = writer1.getBuffer().toString().trim();
+        }
+        catch (ParserConfigurationException | IOException | SAXException | TransformerException  e) {
+            throw new CnpOnlineException("\"Error processing XML request.Please reach out to SDK Support team.\"");
+        }
+        return xmlRequest;
+    }
+
+    private String processTxnToBeEncrypted(String request) {
+        String publicKeyPath=config.getProperty("oltpEncryptionKeyPath");
+        if (publicKeyPath == null) {
+            throw new CnpOnlineException("\"Problem in reading the Encryption Key path. Provide the Encryption key path.\"");
+        }
+        else {
+            Path path = Paths.get(publicKeyPath);
+            if (!Files.exists(path) || !Files.isRegularFile(path)) {
+                throw new CnpOnlineException("\"The provided path is not a valid file path or the file does not exist.\"");
+            }
+
+            try {
+                encryptedTxn = PgpHelper.encryptString(request,path.toString());
+            }
+            catch (IOException | PGPException e) {
+                throw new CnpOnlineException("\"There was an exception while reading the key from specified path," +
+                        "\n If the Path is correct check for keys correctness.\"\n", e);
+            }
+        }
+        return encryptedTxn;
+    }
+
     private String getSchema(String xmlResponse) {
         if (xmlResponse.contains("http://www.vantivcnp.com/schema/online")) {
             xmlResponse = xmlResponse.replace("http://www.vantivcnp.com/schema/online", "http://www.vantivcnp.com/schema");
@@ -1176,4 +1308,9 @@ public class CnpOnline {
 		}
 	}
 
+    private void fillInReportGroup(TransactionTypeWithReportGroupAndRtp txn) {
+        if(txn.getReportGroup() == null) {
+            txn.setReportGroup(config.getProperty("reportGroup"));
+        }
+    }
 }
