@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
@@ -1269,6 +1272,11 @@ public class CnpOnline {
             throw new CnpOnlineException("Problem in reading the Encryption Key path ...Provide the Encryption key path ");
         }
         else {
+            Path path = Paths.get(config.getProperty("oltpEncryptionKeyPath"));
+            if (!Files.exists(path) || !Files.isRegularFile(path)) {
+                throw new CnpOnlineException("The provided path is not a valid file path or the file does not exist.");
+            }
+
             try {
                 encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
             }
