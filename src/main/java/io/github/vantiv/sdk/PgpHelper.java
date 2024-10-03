@@ -231,11 +231,11 @@ public class PgpHelper {
 
         return new EncryptedOutputStream(encOut, fileOutputStream, pOut);
     }
-    public static String encryptString(String plainText, String publicKey)  throws IOException, PGPException {
+    public static String encryptString(String plainText, String publicKeyPath)  throws IOException, PGPException {
         ByteArrayOutputStream encOut = new ByteArrayOutputStream();
         ArmoredOutputStream armoredOut = new ArmoredOutputStream(encOut);
         armoredOut.setHeader("Version", "BCPG v1.78");
-        PGPPublicKey pgpPublicKey = readPublicKey(new FileInputStream(publicKey));
+        PGPPublicKey pgpPublicKey = readPublicKey(new FileInputStream(publicKeyPath));
         Security.addProvider(new BouncyCastleProvider());
 
         byte[] bytes = compressFile(plainText, CompressionAlgorithmTags.ZIP);

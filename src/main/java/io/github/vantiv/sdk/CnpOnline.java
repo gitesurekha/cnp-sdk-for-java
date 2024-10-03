@@ -1268,17 +1268,18 @@ public class CnpOnline {
     }
 
     private String processTxnToBeEncrypted(String request) {
-        if (config.getProperty("oltpEncryptionKeyPath") == null) {
+        String publicKeyPath=config.getProperty("oltpEncryptionKeyPath");
+        if (publicKeyPath == null) {
             throw new CnpOnlineException("\"Problem in reading the Encryption Key path. Provide the Encryption key path.\"");
         }
         else {
-            Path path = Paths.get(config.getProperty("oltpEncryptionKeyPath"));
+            Path path = Paths.get(publicKeyPath);
             if (!Files.exists(path) || !Files.isRegularFile(path)) {
                 throw new CnpOnlineException("\"The provided path is not a valid file path or the file does not exist.\"");
             }
 
             try {
-                encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
+                encryptedTxn = PgpHelper.encryptString(request,path.toString());
             }
             catch (IOException | PGPException e) {
                 throw new CnpOnlineException("\"There was an exception while reading the key from specified path," +
