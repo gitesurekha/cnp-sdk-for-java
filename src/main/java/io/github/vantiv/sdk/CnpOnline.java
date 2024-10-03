@@ -1261,28 +1261,28 @@ public class CnpOnline {
             transformer.transform(new DOMSource(doc), new StreamResult(writer1));
             xmlRequest = writer1.getBuffer().toString().trim();
         }
-        catch (ParserConfigurationException | IOException | SAXException | TransformerException e) {
-            throw new RuntimeException(e);
+        catch (TransformerException | ParserConfigurationException | SAXException | IOException e) {
+            throw new CnpOnlineException("\"Error processing XML request.Please reach out to SDK Support team.\"");
         }
         return xmlRequest;
     }
 
     private String processTxnToBeEncrypted(String request) {
         if (config.getProperty("oltpEncryptionKeyPath") == null) {
-            throw new CnpOnlineException("Problem in reading the Encryption Key path ...Provide the Encryption key path ");
+            throw new CnpOnlineException("\"Problem in reading the Encryption Key path. Provide the Encryption key path.\"");
         }
         else {
             Path path = Paths.get(config.getProperty("oltpEncryptionKeyPath"));
             if (!Files.exists(path) || !Files.isRegularFile(path)) {
-                throw new CnpOnlineException("The provided path is not a valid file path or the file does not exist.");
+                throw new CnpOnlineException("\"The provided path is not a valid file path or the file does not exist.\"");
             }
 
             try {
                 encryptedTxn = PgpHelper.encryptString(request, config.getProperty("oltpEncryptionKeyPath"));
             }
             catch (IOException | PGPException e) {
-                throw new CnpOnlineException("\"There was an exception while reading the key from Specified path" +
-                        "\n If the Path is correct check for keys correctness ", e);
+                throw new CnpOnlineException("\"There was an exception while reading the key from specified path," +
+                        "\n If the Path is correct check for keys correctness.\"\n", e);
             }
         }
         return encryptedTxn;
