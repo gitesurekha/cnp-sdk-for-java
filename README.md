@@ -150,9 +150,9 @@ To enable OLTP encryption functionality, follow these steps:
 
 1. Add the following properties to your configuration file (.cnp_SDK_config.properties):
 
-    oltpEncryptionPayload (true/false)
-    oltpEncryptionKeySequence (this is received in the response of encryptionKeyRequest)
-    oltpEncryptionKeyPath (path where key is stored)
+    1. oltpEncryptionPayload (true/false)
+    2. oltpEncryptionKeySequence (this is received in the response of encryptionKeyRequest)
+    3. oltpEncryptionKeyPath (path where key is stored)
 
 2. Obtain Encryption Key:
     
